@@ -1,0 +1,16 @@
+# Common PHP/Web ignores
+/vendor/
+node_modules/
+.env
+.idea/
+.vscode/
+*.log
+
+# Sensitive Config
+config/database.php
+config/mail.php
+
+# XAMPP/OS specific
+.DS_Store
+Thumbs.db
+desktop.ini

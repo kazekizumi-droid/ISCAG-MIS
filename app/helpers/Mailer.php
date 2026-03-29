@@ -4,28 +4,31 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-require 'c:/xampp/htdocs/phpmailer/phpmailer/src/Exception.php';
-require 'c:/xampp/htdocs/phpmailer/phpmailer/src/PHPMailer.php';
-require 'c:/xampp/htdocs/phpmailer/phpmailer/src/SMTP.php';
+// Use relative paths and include them once
+require_once __DIR__ . '/../libs/PHPMailer/Exception.php';
+require_once __DIR__ . '/../libs/PHPMailer/PHPMailer.php';
+require_once __DIR__ . '/../libs/PHPMailer/SMTP.php';
 
 class Mailer
 {
     public static function sendOTP($toEmail, $otp)
     {
+        // Load mail configuration
+        $config = require BASE_PATH . '/config/mail.php';
         $mail = new PHPMailer(true);
 
         try {
             // Server settings
             $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = 'rjfelizardo25@gmail.com';
-            $mail->Password   = 'lwuz oznc qpkm zsby';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = 587;
+            $mail->Host       = $config['host'];
+            $mail->SMTPAuth   = $config['auth'];
+            $mail->Username   = $config['username'];
+            $mail->Password   = $config['password'];
+            $mail->SMTPSecure = ($config['secure'] === 'tls') ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port       = $config['port'];
 
             // Recipients
-            $mail->setFrom('rjfelizardo25@gmail.com', 'ISCAG Philippines');
+            $mail->setFrom($config['from_email'], $config['from_name']);
             $mail->addAddress($toEmail);
 
             // Content
