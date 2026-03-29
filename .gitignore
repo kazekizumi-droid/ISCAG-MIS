@@ -7,8 +7,7 @@ node_modules/
 *.log
 
 # Sensitive Config
-config/database.php
-config/mail.php
+
 
 # XAMPP/OS specific
 .DS_Store
