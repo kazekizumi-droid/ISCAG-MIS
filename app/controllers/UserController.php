@@ -11,4 +11,3 @@ class UserController extends Controller
         $this->view('user/dashboard');
     }
 }
-echo "Test again";
