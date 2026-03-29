@@ -1,5 +1,5 @@
 <?php
-
+echo "testing"
 /**
  * Error Helper
  * Provides standard error views.
