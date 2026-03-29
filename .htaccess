@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# If the request is not already going to public/
+RewriteCond %{REQUEST_URI} !^/Iscag/public/
+
+# And the requested file doesn't exist in the root
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rewrite to public/index.php
+RewriteRule ^(.*)$ public/index.php [QSA,L]
