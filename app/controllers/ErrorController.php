@@ -1,15 +1,15 @@
 <?php
-echo "testing"
+
 /**
  * Error Helper
  * Provides standard error views.
  */
 class ErrorController
 {
-    public static function show404(): void
-    {
-        http_response_code(404);
-        echo '<!DOCTYPE html>
+  public static function show404(): void
+  {
+    http_response_code(404);
+    echo '<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><title>404 – Page Not Found</title>
 <style>
@@ -26,6 +26,6 @@ class ErrorController
   <p>The page you are looking for does not exist.</p>
   <a href="/">← Back to Home</a>
 </div></body></html>';
-        exit;
-    }
+    exit;
+  }
 }
