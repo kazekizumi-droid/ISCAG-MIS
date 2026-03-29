@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 13, 2026 at 02:45 PM
+-- Generation Time: Mar 29, 2026 at 06:20 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -235,9 +235,9 @@ CREATE TABLE `delayed_registration_affidavit` (
 --
 
 CREATE TABLE `embalmer_certificate` (
-  `embalmer_id` int(11) NOT NULL,
+  `assistant_id` int(11) NOT NULL,
   `deceased_id` int(11) NOT NULL,
-  `embalmer_name` varchar(150) DEFAULT NULL,
+  `assistant_name` varchar(150) DEFAULT NULL,
   `license_no` varchar(100) DEFAULT NULL,
   `issued_on` date DEFAULT NULL,
   `expiry_date` date DEFAULT NULL,
@@ -690,8 +690,18 @@ CREATE TABLE `tenant_accounts` (
   `contactnum` varchar(20) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `confirmpass` varchar(255) NOT NULL,
-  `role` varchar(50) DEFAULT NULL
+  `role` varchar(50) DEFAULT NULL,
+  `otp_code` varchar(6) DEFAULT NULL,
+  `otp_expiry` datetime DEFAULT NULL,
+  `is_verified` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tenant_accounts`
+--
+
+INSERT INTO `tenant_accounts` (`tenant_id`, `first_name`, `last_name`, `sex`, `email`, `contactnum`, `password`, `confirmpass`, `role`, `otp_code`, `otp_expiry`, `is_verified`) VALUES
+(9, 'Ryan', 'Felizardo', 'Male', 'rjfelizardo25@gmail.com', '+639065740819', '$2y$10$jyT2fqtWINEpx8jxsPN5defW3HSLFjOwKS8u6F0b7WH8vySob9koK', '$2y$10$wk/mUDxGcHRcj0zscnaq2O4cpqONXZGdVtSsr/6OPxX39an/67yeW', 'Admin', '101730', '2026-03-29 14:06:24', 1);
 
 -- --------------------------------------------------------
 
@@ -857,7 +867,7 @@ ALTER TABLE `delayed_registration_affidavit`
 -- Indexes for table `embalmer_certificate`
 --
 ALTER TABLE `embalmer_certificate`
-  ADD PRIMARY KEY (`embalmer_id`),
+  ADD PRIMARY KEY (`assistant_id`),
   ADD UNIQUE KEY `deceased_id` (`deceased_id`);
 
 --
@@ -1157,7 +1167,7 @@ ALTER TABLE `delayed_registration_affidavit`
 -- AUTO_INCREMENT for table `embalmer_certificate`
 --
 ALTER TABLE `embalmer_certificate`
-  MODIFY `embalmer_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `assistant_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `external_death_details`
@@ -1319,7 +1329,7 @@ ALTER TABLE `statementofacc`
 -- AUTO_INCREMENT for table `tenant_accounts`
 --
 ALTER TABLE `tenant_accounts`
-  MODIFY `tenant_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `tenant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `tenant_addfam`
