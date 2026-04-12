@@ -26,4 +26,8 @@ $routes = [
     // User
     '/user/dashboard'   => ['UserController',  'dashboard'],
     '/logout'           => ['AuthController', 'logout'],
+
+    // Service Modules (New)
+    '/admin/apartment'  => ['AdminController', 'apartment'],
+    '/admin/payment'    => ['AdminController', 'payment'],
 ];

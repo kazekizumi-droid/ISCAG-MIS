@@ -10,4 +10,16 @@ class AdminController extends Controller
         Auth::protectRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staff_Tenant']);
         $this->view('admin/dashboard');
     }
+
+    public function apartment(): void
+    {
+        Auth::protectRole(['Admin', 'Staff_Tenant']);
+        $this->view('admin/apartment_dashboard');
+    }
+
+    public function payment(): void
+    {
+        Auth::protectRole(['Admin', 'Staff_Tenant']);
+        $this->view('admin/payment');
+    }
 }
