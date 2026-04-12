@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ISCAG MIS — Damayan Records</title>
+  <link rel="stylesheet" href="../../css/admin-shared.css" />
+</head>
+
+<body>
+  <div class="app-wrapper">
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar"><svg viewBox="0 0 24 24">
+          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+        </svg></button>
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <img src="../../logo.jpg" style="max-width:48px;max-height:48px;border-radius:8px;" alt="ISCAG" />
+          <div class="brand-text"><strong>ISCAG MIS</strong><span>Admin Portal</span></div>
+        </div>
+      </div>
+      <div class="sidebar-user">
+        <div class="user-avatar" id="nav-avatar" style="background:var(--accent);">AD</div>
+        <div class="user-info"><strong id="nav-name">MIS Admin</strong><span>System Administrator</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Overview</div>
+        <a href="../Admin_Dashboard.html" class="nav-item" data-tooltip="Dashboard">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
+          </svg>
+          <span class="nav-item-label">Dashboard</span>
+        </a>
+        <a href="../admin_profile.html" class="nav-item" data-tooltip="Profile">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+          </svg>
+          <span class="nav-item-label">My Profile</span>
+        </a>
+        <a href="records.html" class="nav-item" data-tooltip="Users">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3z" />
+          </svg>
+          <span class="nav-item-label">User Management</span>
+        </a>
+        <div class="nav-section-label">Department Records</div>
+        <a href="apartment_records.html" class="nav-item" data-tooltip="Apartment">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4z" />
+          </svg>
+          <span class="nav-item-label">Apartment Records</span>
+        </a>
+        <a href="daawah_records.html" class="nav-item" data-tooltip="Da'wah">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
+          </svg>
+          <span class="nav-item-label">Da'wah Records</span>
+        </a>
+        <a href="damayan_records.html" class="nav-item active" data-tooltip="Damayan">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+          </svg>
+          <span class="nav-item-label">Damayan Records</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="../../homepage/login.html" class="nav-item" data-tooltip="Logout">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
+          </svg>
+          <span class="nav-item-label">Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <div class="top-bar">
+        <div>
+          <div class="top-bar-title">Damayan Records</div>
+          <div class="top-bar-subtitle">Manage burial service requests, scheduling, and documentation</div>
+        </div>
+        <div class="top-bar-actions"><a href="../Admin_Dashboard.html" class="btn-topbar">← Dashboard</a></div>
+      </div>
+      <div class="page-body">
+        <div class="breadcrumb-bar">
+          <a href="../Admin_Dashboard.html">MIS Admin</a><span class="sep">›</span><span class="current">Damayan
+            Records</span>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon purple"><svg viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+              </svg></div>
+            <div>
+              <div class="stat-value" id="s-total">0</div>
+              <div class="stat-label">Total Requests</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon gold"><svg viewBox="0 0 24 24">
+                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2z" />
+              </svg></div>
+            <div>
+              <div class="stat-value" id="s-pending">0</div>
+              <div class="stat-label">Pending</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green"><svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg></div>
+            <div>
+              <div class="stat-value" id="s-completed">0</div>
+              <div class="stat-label">Completed</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue"><svg viewBox="0 0 24 24">
+                <path
+                  d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
+              </svg></div>
+            <div>
+              <div class="stat-value" id="s-billing">0</div>
+              <div class="stat-label">Billing</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BURIAL REQUESTS -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h6><svg viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+              </svg>Burial Service Requests</h6>
+            <span style="font-size:0.75rem;color:var(--text-muted);" id="req-count">0 records</span>
+          </div>
+          <div class="section-card-body" style="padding:0;">
+            <div class="table-wrapper">
+              <table class="mis-table">
+                <thead>
+                  <tr>
+                    <th>Ref #</th>
+                    <th>Requestor</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Updated</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="req-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- BILLING -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h6><svg viewBox="0 0 24 24">
+                <path
+                  d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
+              </svg>Burial Service Billing</h6>
+          </div>
+          <div class="section-card-body" style="padding:0;">
+            <div class="table-wrapper">
+              <table class="mis-table">
+                <thead>
+                  <tr>
+                    <th>Bill ID</th>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="bill-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../JS/admin-shared.js"></script>
+  <script>
+    initAdminData(); loadUserNav();
+    const reqs = getRequests().filter(r => r.type === 'burial_service');
+    const bills = getBilling().filter(b => b.type.toLowerCase().includes('burial'));
+
+    document.getElementById('s-total').textContent = reqs.length;
+    document.getElementById('s-pending').textContent = reqs.filter(r => r.status === 'pending').length;
+    document.getElementById('s-completed').textContent = reqs.filter(r => r.status === 'completed').length;
+    document.getElementById('s-billing').textContent = bills.length;
+    document.getElementById('req-count').textContent = reqs.length + ' records';
+
+    // Requests
+    const tbody = document.getElementById('req-tbody');
+    if (!reqs.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--text-muted);">No burial requests found.</td></tr>'; }
+    else {
+      tbody.innerHTML = reqs.map(r => `<tr>
+    <td class="td-id">${r.id}</td><td style="font-weight:600;">${r.name || 'Unknown'}</td>
+    <td>${formatDate(r.date)}</td><td><span class="badge-status ${badgeClass(r.status)}">${statusLabel(r.status)}</span></td>
+    <td style="color:var(--text-muted);">${formatDate(r.updatedAt)}</td>
+    <td class="actions-cell">
+      <button class="btn-action btn-approve" onclick="approveReq('${r.id}')"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Approve</button>
+      <button class="btn-action btn-reject" onclick="rejectReq('${r.id}')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>Reject</button>
+    </td>
+  </tr>`).join('');
+    }
+
+    // Billing
+    const billTb = document.getElementById('bill-tbody');
+    if (!bills.length) { billTb.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--text-muted);">No billing records.</td></tr>'; }
+    else {
+      billTb.innerHTML = bills.map(b => `<tr>
+    <td class="td-id">${b.id}</td><td style="font-weight:600;">${b.name}</td>
+    <td style="font-weight:700;">${currencyFormat(b.amount)}</td>
+    <td style="color:var(--text-muted);">${formatDate(b.dueDate)}</td>
+    <td><span class="badge-status ${badgeClass(b.status)}">${statusLabel(b.status)}</span></td>
+  </tr>`).join('');
+    }
+
+    function approveReq(id) {
+      const all = getRequests(); const r = all.find(x => x.id === id);
+      if (r) { r.status = 'approved'; r.updatedAt = new Date().toISOString().split('T')[0]; saveRequests(all); addActivityEntry('Burial approved', id + ' approved by MIS Admin', 'MIS Admin', 'approve'); showToast('✅ ' + id + ' approved!', 'var(--success)'); location.reload(); }
+    }
+    function rejectReq(id) {
+      const all = getRequests(); const r = all.find(x => x.id === id);
+      if (r) { r.status = 'rejected'; r.updatedAt = new Date().toISOString().split('T')[0]; saveRequests(all); addActivityEntry('Burial rejected', id + ' rejected by MIS Admin', 'MIS Admin', 'reject'); showToast('❌ ' + id + ' rejected.', 'var(--danger)'); location.reload(); }
+    }
+
+    initSidebar(); initDropdowns();
+  </script>
+</body>
+
+</html>
