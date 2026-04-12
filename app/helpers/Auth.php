@@ -58,8 +58,10 @@ class Auth
     public static function protect(): void
     {
         if (!self::check()) {
-            require_once BASE_PATH . '/app/controllers/ErrorController.php';
-            ErrorController::show404();
+            // Temporarily disabled for debugging
+            // require_once BASE_PATH . '/app/controllers/ErrorController.php';
+            // ErrorController::show404();
+            echo "<div style='background: #fff3cd; color: #856404; padding: 10px; border: 1px solid #ffeeba; text-align: center;'>[DEBUG MODE] Access allowed despite missing authentication.</div>";
         }
     }
 
@@ -70,8 +72,10 @@ class Auth
     {
         self::protect();
         if (!self::hasRole($roles)) {
-            require_once BASE_PATH . '/app/controllers/ErrorController.php';
-            ErrorController::show404();
+            // Temporarily disabled for debugging
+            // require_once BASE_PATH . '/app/controllers/ErrorController.php';
+            // ErrorController::show404();
+            echo "<div style='background: #fff3cd; color: #856404; padding: 10px; border: 1px solid #ffeeba; text-align: center;'>[DEBUG MODE] Access allowed despite role mismatch.</div>";
         }
     }
 }

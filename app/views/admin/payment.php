@@ -1,11 +1,20 @@
+<?php
+// TEMPORARY DEBUG SHIM: Define helpers if they are missing
+if (!function_exists('asset')) {
+    function asset($path) { return "/Iscag/public/" . $path; }
+}
+if (!function_exists('url')) {
+    function url($path) { return "/Iscag" . $path; }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ISCAG MIS — Billing & Payment</title>
-  <link rel="stylesheet" href="<?= asset('css/admin-shared.css') ?>" />
+    <title>ISCAG MIS — Billing & Payment</title>
+    <link rel="stylesheet" href="<?= asset('css/admin-shared.css') ?>" />
   <style>
     /* ── UNIFIED BILLING STYLES ── */
     .billing-wrapper {

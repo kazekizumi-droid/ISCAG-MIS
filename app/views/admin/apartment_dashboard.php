@@ -1,3 +1,13 @@
+<?php
+// TEMPORARY DEBUG SHIM: Define helpers if they are missing
+if (!function_exists('asset')) {
+    function asset($path) { return "/Iscag/public/" . $path; }
+}
+if (!function_exists('url')) {
+    function url($path) { return "/Iscag" . $path; }
+}
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
