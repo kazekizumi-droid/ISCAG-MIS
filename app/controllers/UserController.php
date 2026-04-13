@@ -10,4 +10,15 @@ class UserController extends Controller
         Auth::protectRole(['Applicant', 'Tenant']);
         $this->view('dashboard');
     }
+    public function profile(): void
+    {
+        Auth::protectRole(['Applicant', 'Tenant']);
+        $this->view('user/tenant_account');
+    }
+
+    public function notifications(): void
+    {
+        Auth::protectRole(['Applicant', 'Tenant']);
+        $this->view('user/tenant_notification');
+    }
 }

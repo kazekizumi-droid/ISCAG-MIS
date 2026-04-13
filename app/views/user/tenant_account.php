@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>ISCAG MIS — My Profile</title>
 
-    <link rel="stylesheet" href="../css/user-shared.css" />
+G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
     <style>
         /* ── Locked Dropdown State ── */
         .nav-dropdown-wrap.locked .nav-dropdown-trigger {
@@ -77,9 +77,9 @@
                     <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
                 </svg>
             </button>
-            <div class="sidebar-header">
+             <div class="sidebar-header">
                 <div class="sidebar-brand">
-                    <img src="../../logo.jpg" style="max-width:48px;max-height:48px;border-radius:8px;" alt="ISCAG" />
+                    <img src="<?= asset('assets/logo.jpg') ?>" style="max-width:48px;max-height:48px;border-radius:8px;" alt="ISCAG" />
                     <div class="brand-text"><strong>ISCAG MIS</strong><span>User Portal</span></div>
                 </div>
             </div>
@@ -90,20 +90,20 @@
             </div>
             <nav class="sidebar-nav">
                 <div class="nav-section-label">Menu</div>
-                <a href="dashboard.html" class="nav-item" data-tooltip="Dashboard">
+                <a href="<?= url('/user/dashboard') ?>" class="nav-item" data-tooltip="Dashboard">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
                     </svg>
                     <span class="nav-item-label">My Dashboard</span>
                 </a>
-                <a href="tenant_account.html" class="nav-item active" data-tooltip="Profile">
+                <a href="<?= url('/user/profile') ?>" class="nav-item active" data-tooltip="Profile">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path
                             d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
                     </svg>
                     <span class="nav-item-label">My Profile</span>
                 </a>
-                <a href="tenant_notification.html" class="nav-item" data-tooltip="Notifications">
+                <a href="<?= url('/user/notifications') ?>" class="nav-item" data-tooltip="Notifications">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path
                             d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
@@ -202,7 +202,7 @@
                 </div>
             </nav>
             <div class="sidebar-footer">
-                <a href="../../homepage/login.html" class="nav-item" data-tooltip="Logout">
+                <a href="<?= url('/logout') ?>" class="nav-item" data-tooltip="Logout">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path
                             d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
@@ -219,7 +219,7 @@
                     <div class="top-bar-subtitle">Manage your personal information and account settings</div>
                 </div>
                 <div class="top-bar-actions">
-                    <a href="dashboard.html" class="btn-topbar btn-outline-sm">← Back to Dashboard</a>
+                    <a href="<?= url('/user/dashboard') ?>" class="btn-topbar btn-outline-sm">← Back to Dashboard</a>
                 </div>
             </div>
 

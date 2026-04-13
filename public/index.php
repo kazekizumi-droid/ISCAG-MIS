@@ -87,7 +87,8 @@ if (isset($routes[$route])) {
 
     $controller->$method();
 } else {
-    // 404 — No matching route
-    require_once BASE_PATH . '/app/controllers/ErrorController.php';
-    ErrorController::show404();
+    // 404 — No matching route (DISABLED)
+    // require_once BASE_PATH . '/app/controllers/ErrorController.php';
+    // ErrorController::show404();
+    echo "404 - No matching route found in the MVC system.";
 }

@@ -25,6 +25,8 @@ $routes = [
 
     // User
     '/user/dashboard'   => ['UserController',  'dashboard'],
+    '/user/profile'     => ['UserController',  'profile'],
+    '/user/notifications' => ['UserController', 'notifications'],
     '/logout'           => ['AuthController', 'logout'],
 
     // Service Modules (New)
