@@ -796,7 +796,7 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
                   <div class="activity-dot blue"></div>
                   <div class="activity-text">
                     <strong>New burial request submitted</strong>
-                    <span>By Muhammad Usman · 2 hours ago</span>
+                    <span>By Member · 2 hours ago</span>
                   </div>
                 </div>
               </div>
@@ -810,6 +810,27 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
 </html>
 <?php
 } else {
+  // Fetch dynamic user data for the dashboard widget
+  $userId = $_SESSION['user_id'] ?? null;
+  $dbUser = [];
+  if ($userId) {
+      require_once BASE_PATH . '/app/models/User.php';
+      $userModel = new User();
+      $account = $userModel->findById($userId);
+      $info = $userModel->getAdditionalInfo($userId);
+      
+      $dbUser = [
+          'name' => $info['full_name'] ?? trim(($account['first_name'] ?? '') . ' ' . ($account['last_name'] ?? '')),
+          'email' => $info['email'] ?? ($account['email'] ?? ''),
+          'sex' => $info['sex'] ?? ($account['sex'] ?? ''),
+          'phone' => $info['phone'] ?? ($account['contactnum'] ?? ''),
+          'dob' => $info['dob'] ?? '',
+          'civil' => $info['civil_status'] ?? '',
+          'address' => $info['address'] ?? '',
+          'occupation' => $info['occupation'] ?? '',
+          'arabicName' => $info['muslim_name'] ?? '',
+      ];
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -896,8 +917,12 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
         </div>
       </div>
       <div class="sidebar-user">
-        <div class="user-avatar" id="nav-avatar" style="background:var(--accent);">MU</div>
-        <div class="user-info"><strong id="nav-name">Muhammad Usman</strong><span id="nav-role">Not Verified</span>
+        <div class="user-avatar" id="nav-avatar" style="background:var(--accent);">
+          <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 2)) ?>
+        </div>
+        <div class="user-info">
+          <strong id="nav-name"><?= htmlspecialchars($_SESSION['name'] ?? 'User') ?></strong>
+          <span id="nav-role"><?= htmlspecialchars($_SESSION['role'] ?? 'Verified User') ?></span>
         </div>
       </div>
       <nav class="sidebar-nav">
@@ -990,20 +1015,20 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
             </svg>
           </button>
           <div class="nav-dropdown open" id="apartment-menu">
-            <a href="<?= url('/user/services/apartment-form') ?>">
+            <a href="<?= url('/user/apartment/apply') ?>">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
               </svg>
               Application Form
             </a>
-            <a href="<?= url('/user/services/apartment-status') ?>">
+            <a href="<?= url('/user/apartment/status') ?>">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
               </svg>
               Application Status
             </a>
-            <a href="<?= url('/user/services/apartment-info') ?>">
+            <a href="<?= url('/user/apartment/info') ?>">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z" />
               </svg>
@@ -1039,7 +1064,7 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
 
         <!-- WELCOME BANNER -->
         <div class="welcome-banner">
-          <h3 id="welcome-heading">Assalamu Alaikum!</h3>
+          <h3 id="welcome-heading">Assalamu Alaikum, <?= htmlspecialchars(explode(' ', $_SESSION['name'] ?? 'User')[0]) ?>!</h3>
           <p>Welcome to the Masjid Management Information System. Select a service below to submit a request.</p>
 
           <!-- Profile completion widget -->
@@ -1106,9 +1131,10 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
   <script>
     // ── Inlined data helpers (no module imports — works from file://) ──
     const STORAGE_KEYS = { user: 'mis_user', requests: 'mis_requests', apartments: 'mis_apartments', initialized: 'mis_data_init' };
-    const PROFILE_FIELDS = ['name', 'email', 'gender', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName', 'membership'];
-    const FIELD_LABELS = { name: 'Full Name', email: 'Email Address', gender: 'Gender', phone: 'Contact Number', address: 'Complete Address', dob: 'Date of Birth', civil: 'Civil Status', occupation: 'Occupation', arabicName: 'Muslim / Arabic Name', membership: 'Masjid Membership' };
-    const DEFAULT_USER = { id: 'USR-001', name: 'Muhammad Usman', email: 'musman@example.com', gender: '', phone: '', address: '', dob: '', civil: '', occupation: '', arabicName: '', membership: '', revertYear: '', apartment: '', profileComplete: false };
+    const DB_USER = <?= json_encode($dbUser) ?>;
+    const PROFILE_FIELDS = ['name', 'email', 'sex', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName'];
+    const FIELD_LABELS = { name: 'Full Name', email: 'Email Address', sex: 'Sex', phone: 'Contact Number', address: 'Complete Address', dob: 'Date of Birth', civil: 'Civil Status', occupation: 'Occupation', arabicName: 'Muslim / Arabic Name' };
+    const DEFAULT_USER = { id: 'USR-001', name: 'User', email: 'user@example.com', sex: '', phone: '', address: '', dob: '', civil: '', occupation: '', arabicName: '', revertYear: '', apartment: '', profileComplete: false };
     const DEFAULT_REQUESTS = [
       { id: 'BUR-001', user: 'USR-001', type: 'burial_service', status: 'pending', date: '2026-03-15', updatedAt: '2026-03-15' },
       { id: 'APT-001', user: 'USR-001', type: 'apartment_application', status: 'approved', date: '2026-03-09', updatedAt: '2026-03-12' }
@@ -1131,7 +1157,15 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
     }
     function getUser() {
       const raw = localStorage.getItem(STORAGE_KEYS.user);
-      return raw ? JSON.parse(raw) : { ...DEFAULT_USER };
+      const user = raw ? JSON.parse(raw) : { ...DEFAULT_USER };
+
+      // Synchronize with DB data if available
+      PROFILE_FIELDS.forEach(key => {
+        if (DB_USER[key] && DB_USER[key] !== '') {
+          user[key] = DB_USER[key];
+        }
+      });
+      return user;
     }
     function getRequests() {
       const raw = localStorage.getItem(STORAGE_KEYS.requests);
@@ -1241,9 +1275,7 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
     const isComplete = percentage === 100;
 
     // ── Load user nav ──
-    const navName = document.getElementById('nav-name');
     const navAvatar = document.getElementById('nav-avatar');
-    if (navName) navName.textContent = user.name;
     if (navAvatar) {
       const photo = localStorage.getItem('mis_user_photo');
       if (photo) {
@@ -1251,16 +1283,15 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
         navAvatar.style.backgroundImage = 'url(' + photo + ')';
         navAvatar.style.backgroundSize = 'cover';
         navAvatar.style.backgroundPosition = 'center';
-      } else {
-        navAvatar.textContent = user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
       }
     }
 
-    // ── Set role label ──
+    // ── Set role label color based on status ──
     const navRole = document.getElementById('nav-role');
-    if (navRole) {
-      navRole.textContent = isComplete ? 'Verified User' : 'Not Verified';
-      navRole.style.color = isComplete ? 'var(--success)' : 'var(--warning)';
+    if (navRole && navRole.textContent === 'Not Verified') {
+      navRole.style.color = 'var(--warning)';
+    } else if (navRole) {
+      navRole.style.color = 'var(--success)';
     }
 
     // ── Date in top bar ──
@@ -1268,9 +1299,9 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
     document.getElementById('top-date').textContent =
       now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
-    // ── Welcome heading ──
-    const firstName = user.name.split(' ')[0] || 'User';
-    document.getElementById('welcome-heading').textContent = `Assalamu Alaikum, ${firstName}!`;
+    // ── Welcome heading (JS fallback if needed) ──
+    // const firstName = user.name.split(' ')[0] || 'User';
+    // document.getElementById('welcome-heading').textContent = `Assalamu Alaikum, ${firstName}!`;
 
     // ── Profile completion widget ──
     const ringFill = document.getElementById('ring-fill');
@@ -1296,7 +1327,7 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
     // ── Da'wah sidebar dropdown (gender-based, correct paths) ──
     const dawahMenu = document.getElementById('dawah-menu');
     const dawahTrigger = document.getElementById('dawah-trigger');
-    if (user.gender === 'female') {
+    if (user.sex === 'Female') {
       dawahMenu.innerHTML = `
       <a href="<?= url('/user/services/female-counseling') ?>">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
@@ -1315,7 +1346,7 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
     // ── Build service cards ──
     const serviceGrid = document.getElementById('service-grid');
 
-    const dawahHref = user.gender === 'female'
+    const dawahHref = user.sex === 'Female'
       ? "<?= url('/user/services/female-counseling') ?>"
       : "<?= url('/user/services/male-counseling') ?>";
 
@@ -1332,15 +1363,15 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
       {
         id: 'dawah',
         title: !isComplete ? "Da'wah — Counseling Services"
-          : user.gender === 'female' ? "Da'wah — Sisters' Counseling"
+          : user.sex === 'Female' ? "Da'wah — Sisters' Counseling"
             : "Da'wah — Brothers' Counseling",
         desc: !isComplete
           ? 'Request a confidential counseling session for personal, family, or spiritual matters. Complete your profile to access gender-specific counseling services.'
-          : user.gender === 'female'
+          : user.sex === 'Female'
             ? 'Request a confidential session with our female counselors. All sessions are conducted with utmost privacy and respect for Islamic values.'
             : 'Request a confidential counseling session with our male counselors for personal, family, or spiritual matters. Schedule your preferred appointment time.',
         icon: '<path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>',
-        iconClass: user.gender === 'female' ? 'purple' : 'teal',
+        iconClass: user.sex === 'Female' ? 'purple' : 'teal',
         href: dawahHref,
         btnText: 'Request Service'
       },
@@ -1350,7 +1381,7 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
         desc: 'Apply for a housing unit in the Masjid apartment complex. Submit your family details and preferred unit type for review by the Apartment Management.',
         icon: '<path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4zm-8 4H7v-2h2v2zm0-4H7V9h2v2zm0-4H7V5h2v2zm4 8h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm4 8h-2v-2h2v2zm0-4h-2V9h2v2z"/>',
         iconClass: 'green',
-        href: '<?= url('/user/services/apartment-form') ?>',
+        href: '<?= url('/user/apartment/apply') ?>',
         btnText: 'Apply Now'
       }
     ];

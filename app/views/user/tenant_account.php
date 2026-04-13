@@ -1,3 +1,26 @@
+<?php
+$info = $info ?? [];
+$account = $account ?? [];
+
+$display_name = $info['full_name'] ?? trim(($info['givenname'] ?? ($account['first_name'] ?? '')) . ' ' . ($info['familyname'] ?? ($account['last_name'] ?? '')));
+
+if (empty($display_name)) {
+    $display_name = trim(($account['first_name'] ?? '') . ' ' . ($account['last_name'] ?? ''));
+}
+
+$phpUser = [
+    'name' => $display_name,
+    'email' => $info['email'] ?? ($account['email'] ?? ''),
+    'sex' => $info['sex'] ?? ($account['sex'] ?? ''),
+    'phone' => $info['phone'] ?? ($account['contactnum'] ?? ''),
+    'dob' => $info['dob'] ?? '',
+    'civil' => $info['civil_status'] ?? '',
+    'address' => $info['address'] ?? '',
+    'occupation' => $info['occupation'] ?? '',
+    'arabicName' => $info['muslimname'] ?? '',
+    'revertYear' => $info['revert_year'] ?? '',
+];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +29,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>ISCAG MIS — My Profile</title>
 
-G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
+    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
     <style>
         /* ── Locked Dropdown State ── */
         .nav-dropdown-wrap.locked .nav-dropdown-trigger {
@@ -77,16 +100,20 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
                     <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
                 </svg>
             </button>
-             <div class="sidebar-header">
+            <div class="sidebar-header">
                 <div class="sidebar-brand">
                     <img src="<?= asset('assets/logo.jpg') ?>" style="max-width:48px;max-height:48px;border-radius:8px;" alt="ISCAG" />
                     <div class="brand-text"><strong>ISCAG MIS</strong><span>User Portal</span></div>
                 </div>
             </div>
             <div class="sidebar-user">
-                <div class="user-avatar" id="nav-avatar" style="background:var(--accent);">MU</div>
-                <div class="user-info"><strong id="nav-name">Muhammad Usman</strong><span id="nav-role">Not
-                        Verified</span></div>
+                <div class="user-avatar" id="nav-avatar" style="background:var(--accent);">
+                    <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 2)) ?>
+                </div>
+                <div class="user-info">
+                    <strong id="nav-name"><?= htmlspecialchars($_SESSION['name'] ?? 'User') ?></strong>
+                    <span id="nav-role"><?= htmlspecialchars($_SESSION['role'] ?? 'Verified User') ?></span>
+                </div>
             </div>
             <nav class="sidebar-nav">
                 <div class="nav-section-label">Menu</div>
@@ -467,23 +494,23 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
 
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;">
                     <div><label class="form-label">Full Name *</label><input type="text" class="form-control"
-                            id="f-name" placeholder="Full name" /></div>
+                            id="f-name" placeholder="Full name" value="<?= htmlspecialchars($phpUser['name']) ?>" readonly style="background:var(--bg-light);cursor:not-allowed;" /></div>
                     <div><label class="form-label">Email Address *</label><input type="email" class="form-control"
-                            id="f-email" placeholder="email@example.com" /></div>
-                    <div><label class="form-label">Gender *</label>
-                        <select class="form-select" id="f-gender">
+                            id="f-email" placeholder="email@example.com" value="<?= htmlspecialchars($account['email'] ?? '') ?>" readonly style="background:var(--bg-light);cursor:not-allowed;" /></div>
+                    <div><label class="form-label">Sex *</label>
+                        <select class="form-select" id="f-gender" disabled style="background:var(--bg-light);cursor:not-allowed;">
                             <option value="">— Select —</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option value="Male" <?= ($account['sex'] ?? '') === 'Male' ? 'selected' : '' ?>>Male</option>
+                            <option value="Female" <?= ($account['sex'] ?? '') === 'Female' ? 'selected' : '' ?>>Female</option>
                         </select>
                     </div>
                 </div>
 
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;">
                     <div><label class="form-label">Contact Number *</label><input type="tel" class="form-control"
-                            id="f-phone" placeholder="09XX-XXX-XXXX" /></div>
+                            id="f-phone" placeholder="09XX-XXX-XXXX" value="<?= htmlspecialchars($account['contactnum'] ?? '') ?>" /></div>
                     <div><label class="form-label">Date of Birth</label><input type="date" class="form-control"
-                            id="f-dob" /></div>
+                            id="f-dob" value="<?= $info['birthdate'] ?? '' ?>" /></div>
                     <div><label class="form-label">Civil Status</label>
                         <select class="form-select" id="f-civil">
                             <option value="">— Select —</option>
@@ -497,26 +524,19 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
 
                 <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:24px;">
                     <div><label class="form-label">Complete Address *</label><input type="text" class="form-control"
-                            id="f-address" placeholder="House No., Street, Barangay, City" /></div>
+                            id="f-address" placeholder="House No., Street, Barangay, City" value="<?= htmlspecialchars($info['address'] ?? '') ?>" /></div>
                     <div><label class="form-label">Occupation</label><input type="text" class="form-control"
-                            id="f-occupation" placeholder="Current occupation" /></div>
+                            id="f-occupation" placeholder="Current occupation" value="<?= htmlspecialchars($info['occupation'] ?? '') ?>" /></div>
                 </div>
 
                 <div class="form-section-title">Islamic Information</div>
 
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;">
                     <div><label class="form-label">Muslim / Arabic Name</label><input type="text" class="form-control"
-                            id="f-arabic-name" placeholder="e.g., Abdullah, Fatimah" /></div>
-                    <div><label class="form-label">Masjid Membership</label>
-                        <select class="form-select" id="f-membership">
-                            <option value="">— Select —</option>
-                            <option>Regular Member</option>
-                            <option>Associate Member</option>
-                            <option>Non-Member</option>
-                        </select>
-                    </div>
+                            id="f-arabic-name" placeholder="e.g., Abdullah, Fatimah" value="<?= htmlspecialchars($info['muslimname'] ?? '') ?>" /></div>
+
                     <div><label class="form-label">Year Reverted / Born Muslim</label><input type="number"
-                            class="form-control" id="f-revert-year" placeholder="e.g., 2010" min="1900" max="2026" />
+                            class="form-control" id="f-revert-year" placeholder="e.g., 2010" min="1900" max="2026" value="<?= !empty($info['dateofshahadah']) ? date('Y', strtotime($info['dateofshahadah'])) : '' ?>" />
                     </div>
                 </div>
 
@@ -534,19 +554,80 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
         // ══════════════════════════════════════════
         // Inlined data helpers (from js/data.js)
         // ══════════════════════════════════════════
-        const STORAGE_KEYS = { user: 'mis_user', requests: 'mis_requests', apartments: 'mis_apartments', initialized: 'mis_data_init' };
-        const PROFILE_FIELDS = ['name', 'email', 'gender', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName', 'membership'];
-        const DEFAULT_USER = { id: 'USR-001', name: 'Muhammad Usman', email: 'musman@example.com', gender: '', phone: '', address: '', dob: '', civil: '', occupation: '', arabicName: '', membership: '', revertYear: '', apartment: '', profileComplete: false };
-        const DEFAULT_APARTMENTS = [
-            { id: 'APT-A1', name: 'Unit A-1 · Studio', price: 3500, available: 2, status: 'available' },
-            { id: 'APT-A2', name: 'Unit A-2 · 1-Bedroom', price: 5000, available: 1, status: 'available' },
-            { id: 'APT-B1', name: 'Unit B-1 · 2-Bedroom', price: 7500, available: 0, status: 'occupied' },
-            { id: 'APT-B2', name: 'Unit B-2 · 2-Bedroom', price: 7500, available: 1, status: 'available' },
-            { id: 'APT-C1', name: 'Unit C-1 · Family Suite', price: 10000, available: 0, status: 'reserved' }
+        const STORAGE_KEYS = {
+            user: 'mis_user',
+            requests: 'mis_requests',
+            apartments: 'mis_apartments',
+            initialized: 'mis_data_init'
+        };
+        const PROFILE_FIELDS = ['name', 'email', 'sex', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName'];
+        const DEFAULT_USER = {
+            id: 'USR-001',
+            name: 'Muhammad Usman',
+            email: 'musman@example.com',
+            sex: '',
+            phone: '',
+            address: '',
+            dob: '',
+            civil: '',
+            occupation: '',
+            arabicName: '',
+            revertYear: '',
+            apartment: '',
+            profileComplete: false
+        };
+        const DEFAULT_APARTMENTS = [{
+                id: 'APT-A1',
+                name: 'Unit A-1 · Studio',
+                price: 3500,
+                available: 2,
+                status: 'available'
+            },
+            {
+                id: 'APT-A2',
+                name: 'Unit A-2 · 1-Bedroom',
+                price: 5000,
+                available: 1,
+                status: 'available'
+            },
+            {
+                id: 'APT-B1',
+                name: 'Unit B-1 · 2-Bedroom',
+                price: 7500,
+                available: 0,
+                status: 'occupied'
+            },
+            {
+                id: 'APT-B2',
+                name: 'Unit B-2 · 2-Bedroom',
+                price: 7500,
+                available: 1,
+                status: 'available'
+            },
+            {
+                id: 'APT-C1',
+                name: 'Unit C-1 · Family Suite',
+                price: 10000,
+                available: 0,
+                status: 'reserved'
+            }
         ];
-        const DEFAULT_REQUESTS = [
-            { id: 'BUR-001', user: 'USR-001', type: 'burial_service', status: 'pending', date: '2026-03-15', updatedAt: '2026-03-15' },
-            { id: 'APT-001', user: 'USR-001', type: 'apartment_application', status: 'approved', date: '2026-03-09', updatedAt: '2026-03-12' }
+        const DEFAULT_REQUESTS = [{
+                id: 'BUR-001',
+                user: 'USR-001',
+                type: 'burial_service',
+                status: 'pending',
+                date: '2026-03-15',
+                updatedAt: '2026-03-15'
+            },
+            {
+                id: 'APT-001',
+                user: 'USR-001',
+                type: 'apartment_application',
+                status: 'approved',
+                date: '2026-03-09',
+                updatedAt: '2026-03-12'
+            }
         ];
 
         function initData() {
@@ -557,10 +638,25 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
                 localStorage.setItem(STORAGE_KEYS.initialized, '1');
             }
         }
+
+        const DB_USER = <?= json_encode($phpUser) ?>;
+
         function getUser() {
             const raw = localStorage.getItem(STORAGE_KEYS.user);
-            return raw ? JSON.parse(raw) : { ...DEFAULT_USER };
+            let user = raw ? JSON.parse(raw) : {
+                ...DEFAULT_USER
+            };
+            
+            // Sync with DB data if available
+            Object.keys(DB_USER).forEach(key => {
+                if (DB_USER[key] && DB_USER[key] !== '') {
+                    user[key] = DB_USER[key];
+                }
+            });
+            
+            return user;
         }
+
         function updateUser(data) {
             const user = getUser();
             Object.assign(user, data);
@@ -569,6 +665,7 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
             localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(user));
             return user;
         }
+
         function getRequests() {
             const raw = localStorage.getItem(STORAGE_KEYS.requests);
             return raw ? JSON.parse(raw) : [];
@@ -603,7 +700,7 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
         // ── Da'wah dropdown ──
         const dawahMenu = document.getElementById('dawah-menu');
         const dawahTrigger = document.getElementById('dawah-trigger');
-        if (user.gender === 'female') {
+        if (user.sex === 'Female') {
             dawahMenu.innerHTML = `
             <a href="Da'awah/Female/user_form-female-counseling.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Sisters' Counseling</a>`;
             if (dawahTrigger) dawahTrigger.setAttribute('data-href', "Da'awah/Female/user_form-female-counseling.html");
@@ -614,8 +711,22 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
         }
 
         // ── Populate form fields ──
-        const fields = { name: 'f-name', email: 'f-email', gender: 'f-gender', phone: 'f-phone', dob: 'f-dob', civil: 'f-civil', address: 'f-address', occupation: 'f-occupation', arabicName: 'f-arabic-name', membership: 'f-membership', revertYear: 'f-revert-year' };
-        Object.entries(fields).forEach(([key, id]) => { const el = document.getElementById(id); if (el && user[key]) el.value = user[key]; });
+        const fields = {
+            name: 'f-name',
+            email: 'f-email',
+            sex: 'f-gender',
+            phone: 'f-phone',
+            dob: 'f-dob',
+            civil: 'f-civil',
+            address: 'f-address',
+            occupation: 'f-occupation',
+            arabicName: 'f-arabic-name',
+            revertYear: 'f-revert-year'
+        };
+        Object.entries(fields).forEach(([key, id]) => {
+            const el = document.getElementById(id);
+            if (el && user[key]) el.value = user[key];
+        });
         document.getElementById('profile-fullname').textContent = user.name;
         document.getElementById('profile-email').textContent = user.email;
 
@@ -649,14 +760,24 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
             return d;
         })();
         document.getElementById('member-since-badge').textContent =
-            '\uD83D\uDCC5 Member Since ' + new Date(memberSince).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            '\uD83D\uDCC5 Member Since ' + new Date(memberSince).toLocaleDateString('en-US', {
+                month: 'short',
+                year: 'numeric'
+            });
 
         // Last login
         const now = new Date();
         localStorage.setItem('mis_last_login', now.toISOString());
         document.getElementById('last-login').textContent =
-            now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' ' +
-            now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            now.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            }) + ' ' +
+            now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
 
         // Contact info
         if (user.phone) document.getElementById('contact-phone').textContent = user.phone;
@@ -670,7 +791,7 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
         document.getElementById('qs-rejected').textContent = reqs.filter(r => r.status === 'rejected').length;
 
         // Profile completion
-        const completionFields = ['name', 'email', 'gender', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName', 'membership'];
+        const completionFields = ['name', 'email', 'sex', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName'];
         const filled = completionFields.filter(k => user[k] && String(user[k]).trim() !== '').length;
         const pct = Math.round(filled / completionFields.length * 100);
         document.getElementById('completion-pct').textContent = pct + '%';
@@ -716,7 +837,7 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
         syncSidebarAvatar(committedPhoto);
 
         // Show Save/Cancel when a file is selected
-        avatarInput.addEventListener('change', function () {
+        avatarInput.addEventListener('change', function() {
             const file = this.files[0];
             if (!file) return;
             const reader = new FileReader();
@@ -760,7 +881,9 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
             avatarInput.value = '';
         }
 
-        avatarSaveBtn.addEventListener('click', () => { if (pendingPhoto) doSaveImage(); });
+        avatarSaveBtn.addEventListener('click', () => {
+            if (pendingPhoto) doSaveImage();
+        });
 
         // Cancel — directly discard without modal
         avatarCancelBtn.addEventListener('click', () => doDiscardImage());
@@ -785,70 +908,124 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
 
         function openModal() {
             snapshot = {};
-            Object.entries(fields).forEach(([key, id]) => { const el = document.getElementById(id); if (el) snapshot[id] = el.value; });
+            Object.entries(fields).forEach(([key, id]) => {
+                const el = document.getElementById(id);
+                if (el) snapshot[id] = el.value;
+            });
             profileModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
 
         function closeModal(discard) {
             if (discard) {
-                Object.entries(snapshot).forEach(([id, val]) => { const el = document.getElementById(id); if (el) el.value = val; });
+                Object.entries(snapshot).forEach(([id, val]) => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = val;
+                });
             }
             profileModal.style.display = 'none';
             document.body.style.overflow = '';
         }
 
         saveBtn.addEventListener('click', openModal);
-        saveBtn.onmouseenter = () => { saveBtn.style.background = '#176b45'; saveBtn.style.color = 'white'; saveBtn.style.boxShadow = '0 4px 12px rgba(23,107,69,0.25)'; };
-        saveBtn.onmouseleave = () => { saveBtn.style.background = 'white'; saveBtn.style.color = '#176b45'; saveBtn.style.boxShadow = 'none'; };
+        saveBtn.onmouseenter = () => {
+            saveBtn.style.background = '#176b45';
+            saveBtn.style.color = 'white';
+            saveBtn.style.boxShadow = '0 4px 12px rgba(23,107,69,0.25)';
+        };
+        saveBtn.onmouseleave = () => {
+            saveBtn.style.background = 'white';
+            saveBtn.style.color = '#176b45';
+            saveBtn.style.boxShadow = 'none';
+        };
         modalCloseX.addEventListener('click', () => closeModal(true));
-        modalCloseX.onmouseenter = () => { modalCloseX.style.borderColor = 'var(--danger)'; modalCloseX.style.color = 'var(--danger)'; };
-        modalCloseX.onmouseleave = () => { modalCloseX.style.borderColor = 'transparent'; modalCloseX.style.color = 'var(--text-muted)'; };
+        modalCloseX.onmouseenter = () => {
+            modalCloseX.style.borderColor = 'var(--danger)';
+            modalCloseX.style.color = 'var(--danger)';
+        };
+        modalCloseX.onmouseleave = () => {
+            modalCloseX.style.borderColor = 'transparent';
+            modalCloseX.style.color = 'var(--text-muted)';
+        };
         modalCancelBtn.addEventListener('click', () => closeModal(true));
-        profileModal.addEventListener('click', e => { if (e.target === profileModal) closeModal(true); });
+        profileModal.addEventListener('click', e => {
+            if (e.target === profileModal) closeModal(true);
+        });
 
         modalSaveBtn.addEventListener('click', () => {
             const data = {};
-            Object.entries(fields).forEach(([key, id]) => { const el = document.getElementById(id); if (el) data[key] = el.value; });
+            Object.entries(fields).forEach(([key, id]) => {
+                const el = document.getElementById(id);
+                if (el) data[key] = el.value;
+            });
             data.name = data.name || user.name;
-            const updated = updateUser(data);
-            // update nav name only (don't touch avatar — photo may be set)
-            const navNameEl = document.querySelector('.sidebar-user .user-info strong');
-            if (navNameEl) navNameEl.textContent = updated.name;
-            document.getElementById('profile-fullname').textContent = updated.name;
-            document.getElementById('profile-email').textContent = updated.email || user.email;
-            if (!localStorage.getItem('mis_user_photo')) {
-                const initials = updated.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-                avatarEl.textContent = initials;
-                const navAvatar = document.getElementById('nav-avatar');
-                if (navAvatar) navAvatar.textContent = initials;
-            }
-            if (updated.profileComplete) {
-                badge.textContent = '✅ Complete';
-                badge.style.background = 'rgba(46,125,85,0.1)';
-                badge.style.color = 'var(--success)';
-            }
-            if (updated.phone) document.getElementById('contact-phone').textContent = updated.phone;
-            if (updated.address) document.getElementById('contact-address').textContent = updated.address;
-            const completionFields = ['name', 'email', 'gender', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName', 'membership'];
-            const filled2 = completionFields.filter(k => updated[k] && String(updated[k]).trim() !== '').length;
-            const pct2 = Math.round(filled2 / completionFields.length * 100);
-            document.getElementById('completion-pct').textContent = pct2 + '%';
-            document.getElementById('completion-bar').style.width = pct2 + '%';
-            document.getElementById('completion-bar').style.background = pct2 === 100 ? 'var(--success)' : pct2 >= 50 ? 'var(--warning)' : 'var(--danger)';
-            closeModal(false);
 
-            // Check if profile just became complete
-            if (pct2 === 100 && pct < 100) {
-                showToast('🎉 Your profile has been successfully completed. You now have full access to all available departments.', '#176b45');
-            } else {
-                showToast('\u2705 Profile saved successfully!', '#2f8a60');
-            }
+            // Show loading state
+            const originalText = modalSaveBtn.textContent;
+            modalSaveBtn.disabled = true;
+            modalSaveBtn.textContent = 'Saving...';
 
-            // Re-evaluate sidebar locks in real-time
-            if (typeof window._afterProfileSave === 'function') {
-                window._afterProfileSave(pct2);
-            }
+            fetch('<?= url('/user/profile/update') ?>', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(data)
+            })
+            .then(response => response.json())
+            .then(res => {
+                if (res.success) {
+                    const updated = updateUser(data);
+                    
+                    // Update UI
+                    const navNameEl = document.getElementById('nav-name');
+                    if (navNameEl) navNameEl.textContent = updated.name;
+                    
+                    document.getElementById('profile-fullname').textContent = updated.name;
+                    document.getElementById('profile-email').textContent = updated.email || user.email;
+                    
+                    if (!localStorage.getItem('mis_user_photo')) {
+                        const initials = updated.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+                        avatarEl.textContent = initials;
+                        const navAvatar = document.getElementById('nav-avatar');
+                        if (navAvatar) navAvatar.textContent = initials;
+                    }
+                    
+                    if (updated.phone) document.getElementById('contact-phone').textContent = updated.phone;
+                    if (updated.address) document.getElementById('contact-address').textContent = updated.address;
+                    
+                    const completionFields = ['name', 'email', 'sex', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName'];
+                    const filled2 = completionFields.filter(k => updated[k] && String(updated[k]).trim() !== '').length;
+                    const pct2 = Math.round(filled2 / completionFields.length * 100);
+                    
+                    document.getElementById('completion-pct').textContent = pct2 + '%';
+                    const compBar = document.getElementById('completion-bar');
+                    if (compBar) {
+                        compBar.style.width = pct2 + '%';
+                        compBar.style.background = pct2 === 100 ? 'var(--success)' : pct2 >= 50 ? 'var(--warning)' : 'var(--danger)';
+                    }
+
+                    if (pct2 === 100 && pct < 100) {
+                        showToast('🎉 Your profile has been successfully completed. You now have full access to all available departments.', 'var(--success)');
+                    } else {
+                        showToast('✅ Profile updated successfully!', 'var(--success)');
+                    }
+
+                    closeModal(false);
+                    
+                    if (typeof window._afterProfileSave === 'function') {
+                        window._afterProfileSave(pct2);
+                    }
+                } else {
+                    showToast('❌ Error: ' + res.message, 'var(--danger)');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                showToast('❌ Failed to save profile to server.', 'var(--danger)');
+            })
+            .finally(() => {
+                modalSaveBtn.disabled = false;
+                modalSaveBtn.textContent = originalText;
+            });
         });
 
         function showToast(msg, bg) {
@@ -867,8 +1044,8 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
         function renderActivity(filter) {
             const list = filter === 'all' ? reqs : reqs.filter(r => r.status === filter);
             activityCount.textContent = list.length + ' record' + (list.length !== 1 ? 's' : '');
-            activityTbody.innerHTML = list.length
-                ? list.map(r => {
+            activityTbody.innerHTML = list.length ?
+                list.map(r => {
                     const type = r.type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
                     const updated = r.updatedAt || r.date;
                     return `<tr>
@@ -878,8 +1055,8 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
             <td><span class="badge-status badge-${r.status}">${r.status}</span></td>
             <td style="color:var(--text-muted);">${updated}</td>
           </tr>`;
-                }).join('')
-                : `<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--text-muted);">No activity records found.</td></tr>`;
+                }).join('') :
+                `<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--text-muted);">No activity records found.</td></tr>`;
         }
 
         renderActivity('all');
@@ -898,7 +1075,10 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
                 viewActivityBtn.style.color = 'var(--primary)';
                 viewActivityBtn.style.background = 'rgba(23,107,69,0.04)';
                 setTimeout(() => {
-                    activitySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    activitySection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }, 50);
             } else {
                 activitySection.style.display = 'none';
@@ -931,6 +1111,7 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
 
         // ── Lock/Unlock service dropdowns based on profile completion ──
         const isProfile = pct === 100;
+
         function applyDropdownLocks() {
             const wraps = ['damayan-wrap', 'dawah-wrap', 'apartment-wrap'];
             wraps.forEach(id => {
@@ -955,7 +1136,10 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
                 if (wrap && wrap.classList.contains('locked')) {
                     showToast('🔒 Please complete your profile above to unlock this service.', '#c79a2b');
                     // Scroll to the profile completion bar
-                    document.getElementById('completion-bar').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    document.getElementById('completion-bar').scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
                     return;
                 }
                 if (sidebar && sidebar.classList.contains('collapsed')) {
@@ -966,7 +1150,10 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
                 const isOpen = menu.classList.contains('open');
                 document.querySelectorAll('.nav-dropdown').forEach(m => m.classList.remove('open'));
                 document.querySelectorAll('.nav-dropdown-trigger').forEach(btn => btn.classList.remove('open'));
-                if (!isOpen) { menu.classList.add('open'); trigger.classList.add('open'); }
+                if (!isOpen) {
+                    menu.classList.add('open');
+                    trigger.classList.add('open');
+                }
             });
         }
         initDropdown('damayan-trigger', 'damayan-menu', 'damayan-wrap');
@@ -979,7 +1166,7 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
         // We patch into the save flow to re-check locks after a successful save
         const _origMSBClick = modalSaveBtn.addEventListener;
         // Override: after profile save, re-evaluate locks
-        window._afterProfileSave = function (newPct) {
+        window._afterProfileSave = function(newPct) {
             const wraps = ['damayan-wrap', 'dawah-wrap', 'apartment-wrap'];
             wraps.forEach(id => {
                 const wrap = document.getElementById(id);
@@ -993,7 +1180,7 @@ G    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
         };
 
         // Notification Badge System
-        (function () {
+        (function() {
             const raw = localStorage.getItem('mis_notifications');
             const notifs = raw ? JSON.parse(raw) : [];
             const unread = notifs.filter(n => n.tenantId === user.id && !n.read).length;

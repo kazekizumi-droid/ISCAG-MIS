@@ -41,6 +41,16 @@ class User
     }
 
     /**
+     * Find a user by ID.
+     */
+    public function findById($id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE tenant_id = :id LIMIT 1");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch();
+    }
+
+    /**
      * Check if a field value already exists.
      */
     public function exists(string $field, string $value): bool
@@ -112,5 +122,15 @@ class User
         $hashed = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $this->db->prepare("UPDATE {$this->table} SET password = :password, confirmpass = :confirmpass WHERE email = :email");
         return $stmt->execute(['password' => $hashed, 'confirmpass' => $hashed, 'email' => $email]);
+    }
+
+    /**
+     * Fetch additional profile information.
+     */
+    public function getAdditionalInfo($userId)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM tenant_addinfo WHERE tenant_id = :userId LIMIT 1");
+        $stmt->execute(['userId' => $userId]);
+        return $stmt->fetch();
     }
 }

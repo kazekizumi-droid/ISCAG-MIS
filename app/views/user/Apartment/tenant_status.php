@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ISCAG MIS — Tenant Information</title>
-    <link rel="stylesheet" href="../../css/user-shared.css" />
+    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
     <style>
         /* ═══════════════════════════════════════════
        INFO DASHBOARD LAYOUT
@@ -1026,25 +1026,29 @@
             </button>
             <div class="sidebar-header">
                 <div class="sidebar-brand">
-                    <img src="../../../logo.jpg" style="max-width:48px;max-height:48px;border-radius:8px;"
+                    <img src="<?= asset('assets/logo.jpg') ?>" style="max-width:48px;max-height:48px;border-radius:8px;"
                         alt="ISCAG" />
                     <div class="brand-text"><strong>ISCAG MIS</strong><span>User Portal</span></div>
                 </div>
             </div>
             <div class="sidebar-user">
-                <div class="user-avatar" id="nav-avatar" style="background:var(--accent);">MU</div>
-                <div class="user-info"><strong id="nav-name">Muhammad Usman</strong><span id="nav-role">Not
-                        Verified</span></div>
+                <div class="user-avatar" id="nav-avatar" style="background:var(--accent);">
+                    <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 2)) ?>
+                </div>
+                <div class="user-info">
+                    <strong id="nav-name"><?= htmlspecialchars($_SESSION['name'] ?? 'User') ?></strong>
+                    <span id="nav-role"><?= htmlspecialchars($_SESSION['role'] ?? 'Verified User') ?></span>
+                </div>
             </div>
             <nav class="sidebar-nav">
                 <div class="nav-section-label">Menu</div>
-                <a href="../dashboard.html" class="nav-item">
+                <a href="<?= url('/user/dashboard') ?>" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
                     </svg>
                     <span class="nav-item-label">My Dashboard</span>
                 </a>
-                <a href="../tenant_account.html" class="nav-item">
+                <a href="<?= url('/user/profile') ?>" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path
                             d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
@@ -1065,7 +1069,7 @@
                         </svg>
                     </button>
                     <div class="nav-dropdown" id="damayan-menu">
-                        <a href="../Damayan/user_burial-form.html">
+                        <a href="<?= url('/user/services/burial-form') ?>">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path
                                     d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
@@ -1101,19 +1105,19 @@
                         </svg>
                     </button>
                     <div class="nav-dropdown open" id="apartment-menu">
-                        <a href="tenant_add_information_form.html">
+                        <a href="<?= url('/user/apartment/apply') ?>">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
                             </svg>
                             Application Form
                         </a>
-                        <a href="tenant_status.html" class="active" style="color:white;font-weight:600;">
+                        <a href="<?= url('/user/apartment/status') ?>" class="active" style="color:white;font-weight:600;">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
                             </svg>
                             Application Status
                         </a>
-                        <a href="apartment_information.html">
+                        <a href="<?= url('/user/apartment/info') ?>">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z" />
                             </svg>
@@ -1123,7 +1127,7 @@
                 </div>
             </nav>
             <div class="sidebar-footer">
-                <a href="../../../homepage/login.html" class="nav-item">
+                <a href="<?= url('/logout') ?>" class="nav-item">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path
                             d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
@@ -1141,15 +1145,15 @@
                     <div class="top-bar-subtitle">View your submitted application details and status</div>
                 </div>
                 <div class="top-bar-actions">
-                    <a href="../dashboard.html" class="btn-topbar">← Back to Dashboard</a>
+                    <a href="<?= url('/user/dashboard') ?>" class="btn-topbar">← Back to Dashboard</a>
                 </div>
             </div>
 
             <div class="page-body">
                 <div class="breadcrumb-bar">
-                    <a href="../dashboard.html">Dashboard</a>
+                    <a href="<?= url('/user/dashboard') ?>">Dashboard</a>
                     <span class="sep">›</span>
-                    <a href="tenant_add_information_form.html">Apartment</a>
+                    <a href="<?= url('/user/apartment/apply') ?>">Apartment</a>
                     <span class="sep">›</span>
                     <span class="current">Tenant Information</span>
                 </div>
@@ -1266,7 +1270,7 @@
             <p>You haven't submitted a tenant application yet. Start your application to view your information here.</p>
           </div>
           <div class="empty-state-body">
-            <a href="tenant_add_information_form.html" class="btn-action primary" style="display:inline-flex;">
+            <a href="<?= url('/user/apartment/apply') ?>" class="btn-action primary" style="display:inline-flex;">
               <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>
               Start Application
             </a>
@@ -1560,7 +1564,7 @@
               </div>
               <h3 class="card-header-title">Parking Applications</h3>
             </div>
-            <a href="tenant_parking.html" class="btn-action outline" style="font-size:0.75rem;padding:6px 14px;min-height:auto;text-decoration:none;">
+            <a href="<?= url('/user/apartment/parking') ?>" class="btn-action outline" style="font-size:0.75rem;padding:6px 14px;min-height:auto;text-decoration:none;">
               <svg viewBox="5 -2 24 24" style="width:13px;height:13px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
               New Application
             </a>
@@ -1575,16 +1579,16 @@
             <p>${docsUploaded >= docsTotal ? 'All documents have been submitted. Awaiting admin review.' : 'Upload remaining documents to finalize your application.'}</p>
           </div>
           <div class="action-bar-btns">
-            <a href="../dashboard.html" class="btn-action outline">
+            <a href="<?= url('/user/dashboard') ?>" class="btn-action outline">
               <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
               Dashboard
             </a>
             ${docsUploaded < docsTotal
-                    ? `<a href="tenant_add_information_form.html" class="btn-action primary">
+                    ? `<a href="<?= url('/user/apartment/apply') ?>" class="btn-action primary">
                   <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
                   Upload Documents
                  </a>`
-                    : `<a href="tenant_add_information_form.html" class="btn-action primary">
+                    : `<a href="<?= url('/user/apartment/apply') ?>" class="btn-action primary">
                   <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg>
                   View Application Form
                  </a>`
@@ -1620,7 +1624,7 @@
             <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
             <h4>No Parking Applications</h4>
             <p>You haven't submitted any parking application yet.</p>
-            <a href="tenant_parking.html" class="btn-apply">
+            <a href="<?= url('/user/apartment/parking') ?>" class="btn-apply">
               <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
               Apply for Parking
             </a>

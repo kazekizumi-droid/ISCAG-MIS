@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ISCAG MIS — Tenant Application</title>
-  <link rel="stylesheet" href="../../css/user-shared.css" />
+  <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
   <style>
     /* ═══════════════════════════════════════════
        STEPPER PROGRESS BAR
@@ -1717,25 +1717,25 @@
             </svg>
           </button>
           <div class="nav-dropdown open" id="apartment-menu">
-                        <a href="tenant_add_information_form.html" class="active" style="color:white;font-weight:600;">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
-                            </svg>
-                            Application Form
-                        </a>
-                        <a href="tenant_status.html">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
-                            </svg>
-                            Application Status
-                        </a>
-                        <a href="apartment_information.html">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z" />
-                            </svg>
-                            Apartment Information
-                        </a>
-                    </div>
+            <a href="tenant_add_information_form.html" class="active" style="color:white;font-weight:600;">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
+              </svg>
+              Application Form
+            </a>
+            <a href="tenant_status.html">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+              </svg>
+              Application Status
+            </a>
+            <a href="apartment_information.html">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z" />
+              </svg>
+              Apartment Information
+            </a>
+          </div>
         </div>
       </nav>
       <div class="sidebar-footer">
@@ -1825,7 +1825,7 @@
             <!-- ── FORM HEADER ── -->
             <div class="form-doc-header">
               <div class="form-doc-header-top">
-                <img src="../../../logo.jpg" alt="ISCAG Logo" class="form-doc-header-logo" />
+                <img src="<?= asset('assets/logo.jpg') ?>" alt="ISCAG Logo" class="form-doc-header-logo" />
                 <div class="form-doc-header-text">
                   <div class="arabic-line">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
                   <div class="org-name-ar">مركز البحوث الإسلامية و الدعوة و الإرشاد في الفلبين</div>
@@ -1987,7 +1987,7 @@
                     </svg>
                   </div>
                   <div class="unit-card-thumb">
-                    <img src="assets/room-images/studio-1.png" alt="Studio Unit Preview" />
+                    <img src="<?= asset('assets/room-images/studio-1.png') ?>" alt="Studio Preview" />
                     <span class="unit-card-thumb-overlay">Studio</span>
                   </div>
                   <div class="unit-card-body">
@@ -2011,7 +2011,7 @@
                     </svg>
                   </div>
                   <div class="unit-card-thumb">
-                    <img src="assets/room-images/1br-1.png" alt="One-Bedroom Preview" />
+                    <img src="<?= asset('assets/room-images/1br-1.png') ?>" alt="One-Bedroom Preview" />
                     <span class="unit-card-thumb-overlay">1 Bedroom</span>
                   </div>
                   <div class="unit-card-body">
@@ -2035,7 +2035,7 @@
                     </svg>
                   </div>
                   <div class="unit-card-thumb">
-                    <img src="assets/room-images/2br-1.png" alt="Two-Bedroom Preview" />
+                    <img src="<?= asset('assets/room-images/2br-1.png') ?>" alt="Two-Bedroom Preview" />
                     <span class="unit-card-thumb-overlay">2 Bedroom</span>
                   </div>
                   <div class="unit-card-body">
@@ -2161,7 +2161,7 @@
 
             <!-- ══ STEP 1 NAVIGATION ══ -->
             <div class="form-submit-row">
-              <a href="../tenant_dashboard.html" class="btn-cancel">Cancel</a>
+              <a href="../tenant_dashboard.php" class="btn-cancel">Cancel</a>
               <button class="btn-submit" type="button" id="next-step-btn">
                 Next: Upload Documents
                 <svg viewBox="0 0 24 24">
@@ -2284,19 +2284,81 @@
   <script src="../../JS/room-preview.js"></script>
   <script>
     // ═══ DATA HELPERS ═══
-    const STORAGE_KEYS = { user: 'mis_user', requests: 'mis_requests', apartments: 'mis_apartments', initialized: 'mis_data_init' };
+    const STORAGE_KEYS = {
+      user: 'mis_user',
+      requests: 'mis_requests',
+      apartments: 'mis_apartments',
+      initialized: 'mis_data_init'
+    };
     const PROFILE_FIELDS = ['name', 'email', 'gender', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName', 'membership'];
-    const DEFAULT_USER = { id: 'USR-001', name: 'Muhammad Usman', email: 'musman@example.com', gender: '', phone: '', address: '', dob: '', civil: '', occupation: '', arabicName: '', membership: '', revertYear: '', apartment: '', profileComplete: false };
-    const DEFAULT_REQUESTS = [
-      { id: 'BUR-001', user: 'USR-001', type: 'burial_service', status: 'pending', date: '2026-03-15', updatedAt: '2026-03-15' },
-      { id: 'APT-001', user: 'USR-001', type: 'apartment_application', status: 'approved', date: '2026-03-09', updatedAt: '2026-03-12' }
+    const DEFAULT_USER = {
+      id: 'USR-001',
+      name: 'Muhammad Usman',
+      email: 'musman@example.com',
+      gender: '',
+      phone: '',
+      address: '',
+      dob: '',
+      civil: '',
+      occupation: '',
+      arabicName: '',
+      membership: '',
+      revertYear: '',
+      apartment: '',
+      profileComplete: false
+    };
+    const DEFAULT_REQUESTS = [{
+        id: 'BUR-001',
+        user: 'USR-001',
+        type: 'burial_service',
+        status: 'pending',
+        date: '2026-03-15',
+        updatedAt: '2026-03-15'
+      },
+      {
+        id: 'APT-001',
+        user: 'USR-001',
+        type: 'apartment_application',
+        status: 'approved',
+        date: '2026-03-09',
+        updatedAt: '2026-03-12'
+      }
     ];
-    const DEFAULT_APARTMENTS = [
-      { id: 'APT-A1', name: 'Unit A-1 · Studio', price: 3500, available: 2, status: 'available' },
-      { id: 'APT-A2', name: 'Unit A-2 · 1-Bedroom', price: 5000, available: 1, status: 'available' },
-      { id: 'APT-B1', name: 'Unit B-1 · 2-Bedroom', price: 7500, available: 0, status: 'occupied' },
-      { id: 'APT-B2', name: 'Unit B-2 · 2-Bedroom', price: 7500, available: 1, status: 'available' },
-      { id: 'APT-C1', name: 'Unit C-1 · Family Suite', price: 10000, available: 0, status: 'reserved' }
+    const DEFAULT_APARTMENTS = [{
+        id: 'APT-A1',
+        name: 'Unit A-1 · Studio',
+        price: 3500,
+        available: 2,
+        status: 'available'
+      },
+      {
+        id: 'APT-A2',
+        name: 'Unit A-2 · 1-Bedroom',
+        price: 5000,
+        available: 1,
+        status: 'available'
+      },
+      {
+        id: 'APT-B1',
+        name: 'Unit B-1 · 2-Bedroom',
+        price: 7500,
+        available: 0,
+        status: 'occupied'
+      },
+      {
+        id: 'APT-B2',
+        name: 'Unit B-2 · 2-Bedroom',
+        price: 7500,
+        available: 1,
+        status: 'available'
+      },
+      {
+        id: 'APT-C1',
+        name: 'Unit C-1 · Family Suite',
+        price: 10000,
+        available: 0,
+        status: 'reserved'
+      }
     ];
 
     function initData() {
@@ -2307,20 +2369,45 @@
         localStorage.setItem(STORAGE_KEYS.initialized, '1');
       }
     }
+
     function getUser() {
       const raw = localStorage.getItem(STORAGE_KEYS.user);
-      return raw ? JSON.parse(raw) : { ...DEFAULT_USER };
+      return raw ? JSON.parse(raw) : {
+        ...DEFAULT_USER
+      };
     }
+
     function getProfileCompletion() {
       const user = getUser();
       const missing = [];
       let filled = 0;
-      const labels = { name: 'Full Name', email: 'Email Address', gender: 'Gender', phone: 'Contact Number', address: 'Complete Address', dob: 'Date of Birth', civil: 'Civil Status', occupation: 'Occupation', arabicName: 'Muslim / Arabic Name', membership: 'Masjid Membership' };
+      const labels = {
+        name: 'Full Name',
+        email: 'Email Address',
+        gender: 'Gender',
+        phone: 'Contact Number',
+        address: 'Complete Address',
+        dob: 'Date of Birth',
+        civil: 'Civil Status',
+        occupation: 'Occupation',
+        arabicName: 'Muslim / Arabic Name',
+        membership: 'Masjid Membership'
+      };
       PROFILE_FIELDS.forEach(k => {
-        if (user[k] && String(user[k]).trim() !== '') { filled++; } else { missing.push(labels[k] || k); }
+        if (user[k] && String(user[k]).trim() !== '') {
+          filled++;
+        } else {
+          missing.push(labels[k] || k);
+        }
       });
-      return { percentage: Math.round((filled / PROFILE_FIELDS.length) * 100), filled, total: PROFILE_FIELDS.length, missingFields: missing };
+      return {
+        percentage: Math.round((filled / PROFILE_FIELDS.length) * 100),
+        filled,
+        total: PROFILE_FIELDS.length,
+        missingFields: missing
+      };
     }
+
     function addRequest(req) {
       const raw = localStorage.getItem(STORAGE_KEYS.requests);
       const requests = raw ? JSON.parse(raw) : [];
@@ -2362,14 +2449,17 @@
 
     // ── Da'wah dropdown ──
     const dawahMenu = document.getElementById('dawah-menu');
-    dawahMenu.innerHTML = user.gender === 'female'
-      ? `<a href="../Female/counseling_female.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Sisters' Counseling</a>
-       <a href="../Female/islamic_edu_female.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>Sisters' Islamic Education</a>`
-      : `<a href="../Da'awah/counseling_male.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Brothers' Counseling</a>
+    dawahMenu.innerHTML = user.gender === 'female' ?
+      `<a href="../Female/counseling_female.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Sisters' Counseling</a>
+       <a href="../Female/islamic_edu_female.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>Sisters' Islamic Education</a>` :
+      `<a href="../Da'awah/counseling_male.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Brothers' Counseling</a>
        <a href="../Da'awah/islamic_edu_male.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>Brothers' Islamic Education</a>`;
 
     // ── Profile access gate ──
-    const { percentage, missingFields } = getProfileCompletion();
+    const {
+      percentage,
+      missingFields
+    } = getProfileCompletion();
     if (percentage < 100) {
       if (!document.getElementById('acm-keyframes')) {
         const styleEl = document.createElement('style');
@@ -2382,8 +2472,8 @@
         document.head.appendChild(styleEl);
       }
 
-      const missingHtml = missingFields.length > 0
-        ? `<div style="margin-top:16px;text-align:left;">
+      const missingHtml = missingFields.length > 0 ?
+        `<div style="margin-top:16px;text-align:left;">
            <p style="font-size:0.78rem;color:#6f7f78;margin:0 0 8px;font-weight:600;">The following information is still required:</p>
            <ul style="margin:0;padding:0 0 0 18px;font-size:0.8rem;color:#1f2e2a;line-height:1.8;">
              ${missingFields.map(f => '<li>' + f + '</li>').join('')}
@@ -2456,13 +2546,15 @@
       }
 
       document.getElementById('acm-primary-btn').addEventListener('click', () => {
-        window.location.href = '../tenant_account.html';
+        window.location.href = '<?= url('/user/profile') ?>';
       });
       document.getElementById('acm-cancel-btn').addEventListener('click', () => {
-        window.location.href = '../tenant_dashboard.html';
+        window.location.href = '<?= url('/user/dashboard') ?>';
       });
       modal.addEventListener('click', e => {
-        if (e.target === modal) { shakeModal(); }
+        if (e.target === modal) {
+          shakeModal();
+        }
       });
     }
 
@@ -2517,7 +2609,10 @@
       stepLabel.textContent = step;
 
       // Scroll to top
-      document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' });
+      document.querySelector('.main-content').scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
 
       // Render doc cards when entering step 2
       if (step === 2) {
@@ -2568,11 +2663,11 @@
     const photoBox = document.getElementById('photo-upload-box');
     let uploadedPhotoSrc = null;
 
-    photoInput.addEventListener('change', function () {
+    photoInput.addEventListener('change', function() {
       const file = this.files[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = function (e) {
+        reader.onload = function(e) {
           uploadedPhotoSrc = e.target.result;
           const icon = document.getElementById('photo-placeholder-icon');
           const label = document.getElementById('photo-label-text');
@@ -2589,7 +2684,7 @@
       }
     });
 
-    photoBox.addEventListener('click', function (e) {
+    photoBox.addEventListener('click', function(e) {
       if (!uploadedPhotoSrc) return;
       e.preventDefault();
       e.stopPropagation();
@@ -2622,7 +2717,7 @@
       });
     }
 
-    photoBox.addEventListener('dblclick', function (e) {
+    photoBox.addEventListener('dblclick', function(e) {
       if (uploadedPhotoSrc) {
         e.preventDefault();
         e.stopPropagation();
@@ -2638,7 +2733,7 @@
     const dobInput = document.getElementById('dob');
     const ageInput = document.getElementById('age');
     if (dobInput && ageInput) {
-      dobInput.addEventListener('change', function () {
+      dobInput.addEventListener('change', function() {
         if (this.value) {
           const birth = new Date(this.value);
           const today = new Date();
@@ -2670,8 +2765,12 @@
         availableCount: unitAvailability[unitType] || 0,
         basePath: 'assets/room-images/',
         selectLabel: 'Select This Unit',
-        onSelect: function (type) {
-          const radioMap = { studio: 'unit1', '1br': 'unit2', '2br': 'unit3' };
+        onSelect: function(type) {
+          const radioMap = {
+            studio: 'unit1',
+            '1br': 'unit2',
+            '2br': 'unit3'
+          };
           const radio = document.getElementById(radioMap[type]);
           if (radio) {
             radio.checked = true;
@@ -2695,7 +2794,10 @@
         const isOpen = menu.classList.contains('open');
         document.querySelectorAll('.nav-dropdown').forEach(m => m.classList.remove('open'));
         document.querySelectorAll('.nav-dropdown-trigger').forEach(btn => btn.classList.remove('open'));
-        if (!isOpen) { menu.classList.add('open'); trigger.classList.add('open'); }
+        if (!isOpen) {
+          menu.classList.add('open');
+          trigger.classList.add('open');
+        }
       });
     }
     initDropdown('damayan-trigger', 'damayan-menu');
@@ -2706,8 +2808,7 @@
     // ═══════════════════════════════════════════
     //  STEP 2: REQUIRED DOCUMENTS LOGIC
     // ═══════════════════════════════════════════
-    const REQUIRED_DOCS = [
-      {
+    const REQUIRED_DOCS = [{
         id: 'doc-income',
         name: 'Proof of Income',
         note: 'Submit payslip, certificate of employment, or business permit',
@@ -2720,9 +2821,14 @@
         note: 'Upload front and back of any government-issued ID',
         icon: '<path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 18V6h16v12H4zm6-4c1.38 0 2.5-1.12 2.5-2.5S11.38 9 10 9s-2.5 1.12-2.5 2.5S8.62 14 10 14zm0 1c-1.63 0-5 .97-5 2.5V18h10v-.5C15 15.97 11.63 15 10 15zm6.5-6H20v1h-3.5v-1zm0 2H20v1h-3.5v-1zm0 2H20v1h-3.5v-1z"/>',
         type: 'dual',
-        slots: [
-          { key: 'doc-id-front', label: 'Front Side' },
-          { key: 'doc-id-back', label: 'Back Side' }
+        slots: [{
+            key: 'doc-id-front',
+            label: 'Front Side'
+          },
+          {
+            key: 'doc-id-back',
+            label: 'Back Side'
+          }
         ]
       },
       {
@@ -2762,7 +2868,10 @@
 
     function saveUploadedDoc(docId, dataUrl) {
       const docs = getUploadedDocs();
-      docs[docId] = { dataUrl, uploadedAt: new Date().toISOString() };
+      docs[docId] = {
+        dataUrl,
+        uploadedAt: new Date().toISOString()
+      };
       localStorage.setItem(DOC_STORAGE_KEY, JSON.stringify(docs));
     }
 
@@ -2793,8 +2902,13 @@
 
           let statusClass = 'pending';
           let statusText = 'Pending';
-          if (allUploaded) { statusClass = 'uploaded'; statusText = 'Uploaded'; }
-          else if (partialUploaded) { statusClass = 'pending'; statusText = '1 of 2'; }
+          if (allUploaded) {
+            statusClass = 'uploaded';
+            statusText = 'Uploaded';
+          } else if (partialUploaded) {
+            statusClass = 'pending';
+            statusText = '1 of 2';
+          }
 
           card.innerHTML = `
             <div class="doc-card-header">
@@ -2863,15 +2977,20 @@
             const dropzone = card.querySelector(`#dropzone-${slot.key}`);
             const fileInput = card.querySelector(`#input-${slot.key}`);
             dropzone.addEventListener('click', () => fileInput.click());
-            dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
-            dropzone.addEventListener('dragleave', () => { dropzone.classList.remove('dragover'); });
+            dropzone.addEventListener('dragover', (e) => {
+              e.preventDefault();
+              dropzone.classList.add('dragover');
+            });
+            dropzone.addEventListener('dragleave', () => {
+              dropzone.classList.remove('dragover');
+            });
             dropzone.addEventListener('drop', (e) => {
               e.preventDefault();
               dropzone.classList.remove('dragover');
               const file = e.dataTransfer.files[0];
               if (file) handleFileUpload(slot.key, file);
             });
-            fileInput.addEventListener('change', function () {
+            fileInput.addEventListener('change', function() {
               const file = this.files[0];
               if (file) handleFileUpload(slot.key, file);
             });
@@ -2930,15 +3049,20 @@
           const dropzone = card.querySelector(`#dropzone-${doc.id}`);
           const fileInput = card.querySelector(`#input-${doc.id}`);
           dropzone.addEventListener('click', () => fileInput.click());
-          dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
-          dropzone.addEventListener('dragleave', () => { dropzone.classList.remove('dragover'); });
+          dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+          });
+          dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+          });
           dropzone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropzone.classList.remove('dragover');
             const file = e.dataTransfer.files[0];
             if (file) handleFileUpload(doc.id, file);
           });
-          fileInput.addEventListener('change', function () {
+          fileInput.addEventListener('change', function() {
             const file = this.files[0];
             if (file) handleFileUpload(doc.id, file);
           });
@@ -2959,7 +3083,7 @@
         return;
       }
       const reader = new FileReader();
-      reader.onload = function (e) {
+      reader.onload = function(e) {
         saveUploadedDoc(docId, e.target.result);
         renderCards();
         showToast('✓  Document uploaded successfully!', '#2f8a60');
@@ -2971,7 +3095,7 @@
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = 'image/*,.pdf';
-      input.addEventListener('change', function () {
+      input.addEventListener('change', function() {
         if (this.files[0]) handleFileUpload(docId, this.files[0]);
       });
       input.click();
@@ -3040,15 +3164,42 @@
       }
 
       // Save the application request
-      const newReq = addRequest({ type: 'apartment_application', user: user.id });
+      const newReq = addRequest({
+        type: 'apartment_application',
+        user: user.id
+      });
 
       // Save required documents status
-      const reqDocs = [
-        { id: 'doc-income', name: 'Proof of Income', status: 'completed', completedNote: 'Document uploaded and submitted' },
-        { id: 'doc-id', name: 'Valid ID (Photocopy)', status: 'completed', completedNote: 'Document uploaded and submitted' },
-        { id: 'doc-birth', name: 'Birth Certificate (Photocopy)', status: 'completed', completedNote: 'Document uploaded and submitted' },
-        { id: 'doc-nbi', name: 'NBI / Police Clearance', status: 'completed', completedNote: 'Document uploaded and submitted' },
-        { id: 'doc-photo', name: '2x2 Picture (2pcs)', status: 'completed', completedNote: 'Document uploaded and submitted' }
+      const reqDocs = [{
+          id: 'doc-income',
+          name: 'Proof of Income',
+          status: 'completed',
+          completedNote: 'Document uploaded and submitted'
+        },
+        {
+          id: 'doc-id',
+          name: 'Valid ID (Photocopy)',
+          status: 'completed',
+          completedNote: 'Document uploaded and submitted'
+        },
+        {
+          id: 'doc-birth',
+          name: 'Birth Certificate (Photocopy)',
+          status: 'completed',
+          completedNote: 'Document uploaded and submitted'
+        },
+        {
+          id: 'doc-nbi',
+          name: 'NBI / Police Clearance',
+          status: 'completed',
+          completedNote: 'Document uploaded and submitted'
+        },
+        {
+          id: 'doc-photo',
+          name: '2x2 Picture (2pcs)',
+          status: 'completed',
+          completedNote: 'Document uploaded and submitted'
+        }
       ];
       localStorage.setItem('mis_apt_docs_' + newReq.id, JSON.stringify(reqDocs));
 
@@ -3170,7 +3321,7 @@
                 You will receive a notification once the review is complete.
               </p>
               <div style="display:flex;gap:12px;justify-content:center;">
-                <a href="../tenant_dashboard.html" style="
+                <a href="<?= url('/user/dashboard') ?>" style="
                   display:inline-flex;align-items:center;gap:8px;
                   padding:11px 24px;border-radius:8px;
                   border:1.5px solid var(--border);
@@ -3182,7 +3333,7 @@
                   <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor;"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
                   Go to Dashboard
                 </a>
-                <a href="tenant_status.html" style="
+                <a href="<?= url('/user/apartment/status') ?>" style="
                   display:inline-flex;align-items:center;gap:8px;
                   padding:11px 24px;border-radius:8px;
                   background:linear-gradient(135deg,var(--primary-dark),var(--primary-light));

@@ -29,6 +29,13 @@ $routes = [
     '/user/notifications' => ['UserController', 'notifications'],
     '/logout'           => ['AuthController', 'logout'],
 
+    // User Apartment Module
+    '/user/apartment/apply'  => ['ApartmentController', 'apply'],
+    '/user/apartment/status' => ['ApartmentController', 'status'],
+    '/user/apartment/info'   => ['ApartmentController', 'info'],
+    '/user/apartment/save'   => ['ApartmentController', 'save'],
+    '/user/apartment/upload' => ['ApartmentController', 'handleUpload'],
+
     // Service Modules (New)
     '/admin/apartment'  => ['AdminController', 'apartment'],
     '/admin/payment'    => ['AdminController', 'payment'],
