@@ -1652,13 +1652,13 @@
       </div>
       <nav class="sidebar-nav">
         <div class="nav-section-label">Menu</div>
-        <a href="../dashboard.html" class="nav-item">
+        <a href="<?= url('/user/dashboard') ?>" class="nav-item">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
           </svg>
           <span class="nav-item-label">My Dashboard</span>
         </a>
-        <a href="../tenant_account.html" class="nav-item">
+        <a href="<?= url('/user/profile') ?>" class="nav-item">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path
               d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
@@ -1717,19 +1717,19 @@
             </svg>
           </button>
           <div class="nav-dropdown open" id="apartment-menu">
-            <a href="tenant_add_information_form.html" class="active" style="color:white;font-weight:600;">
+            <a href="<?= url('/user/apartment/apply') ?>" class="active" style="color:white;font-weight:600;">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
               </svg>
               Application Form
             </a>
-            <a href="tenant_status.html">
+            <a href="<?= url('/user/apartment/status') ?>">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
               </svg>
               Application Status
             </a>
-            <a href="apartment_information.html">
+            <a href="<?= url('/user/apartment/info') ?>">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z" />
               </svg>
@@ -1739,7 +1739,7 @@
         </div>
       </nav>
       <div class="sidebar-footer">
-        <a href="../../../homepage/login.html" class="nav-item">
+        <a href="<?= url('/logout') ?>" class="nav-item">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path
               d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
@@ -1757,13 +1757,13 @@
           <div class="top-bar-subtitle">Complete your application form and upload required documents</div>
         </div>
         <div class="top-bar-actions">
-          <a href="../tenant_dashboard.html" class="btn-topbar">← Back to Dashboard</a>
+          <a href="<?= url('/user/dashboard') ?>" class="btn-topbar">← Back to Dashboard</a>
         </div>
       </div>
 
       <div class="page-body">
         <div class="breadcrumb-bar">
-          <a href="../tenant_dashboard.html">Dashboard</a>
+          <a href="<?= url('/user/dashboard') ?>">Dashboard</a>
           <span class="sep">›</span>
           <span class="current">Tenant Application</span>
         </div>
@@ -2161,7 +2161,7 @@
 
             <!-- ══ STEP 1 NAVIGATION ══ -->
             <div class="form-submit-row">
-              <a href="../tenant_dashboard.php" class="btn-cancel">Cancel</a>
+              <a href="<?= url('/user/dashboard') ?>" class="btn-cancel">Cancel</a>
               <button class="btn-submit" type="button" id="next-step-btn">
                 Next: Upload Documents
                 <svg viewBox="0 0 24 24">
@@ -2563,41 +2563,50 @@
 
     // Collect all Step 1 fields and POST to server
     function saveStep1ToServer() {
-      const v = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+      const v = id => {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : '';
+      };
       const unitRadio = document.querySelector('input[name="unit"]:checked');
-      const unitMap = { unit1: 'Studio', unit2: 'One-Bedroom', unit3: 'Two-Bedroom' };
+      const unitMap = {
+        unit1: 'Studio',
+        unit2: 'One-Bedroom',
+        unit3: 'Two-Bedroom'
+      };
       const roomtype = unitRadio ? (unitMap[unitRadio.id] || 'Studio') : 'Studio';
 
       const payload = {
         addinfo: {
-          familyname:       v('family-name'),
-          givenname:        v('given-name'),
-          middlename:       v('mi'),
-          muslimname:       v('muslim-name'),
-          birthdate:        v('dob'),
-          age:              parseInt(v('age')) || 0,
-          pob:              v('pob'),
-          sex:              v('gender'),
-          address:          v('address'),
-          dateofshahadah:   v('shahadah-date'),
+          familyname: v('family-name'),
+          givenname: v('given-name'),
+          middlename: v('mi'),
+          muslimname: v('muslim-name'),
+          birthdate: v('dob'),
+          age: parseInt(v('age')) || 0,
+          pob: v('pob'),
+          sex: v('gender'),
+          address: v('address'),
+          dateofshahadah: v('shahadah-date'),
           tribalaffliation: v('tribal'),
-          numofmuslim:      parseInt(v('muslim-count')) || 0,
-          civil_status:     v('civil-status'),
-          occupation:       v('occupation'),
-          companyname:      v('company'),
-          companyadd:       v('company-address'),
-          companyphone:     v('company-phone'),
-          ref_name:         v('ref-name'),
-          ref_contact:      v('ref-contact'),
-          iscag_students:   parseInt(v('iscag-students')) || 0,
-          date_applied:     v('date-application')
+          numofmuslim: parseInt(v('muslim-count')) || 0,
+          civil_status: v('civil-status'),
+          occupation: v('occupation'),
+          companyname: v('company'),
+          companyadd: v('company-address'),
+          companyphone: v('company-phone'),
+          ref_name: v('ref-name'),
+          ref_contact: v('ref-contact'),
+          iscag_students: parseInt(v('iscag-students')) || 0,
+          date_applied: v('date-application')
         },
         roomtype: roomtype
       };
 
       return fetch('<?= url("/user/apartment/save") ?>', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(payload)
       }).then(r => r.json());
     }
@@ -2737,9 +2746,14 @@
         const fd = new FormData();
         fd.append('file', file);
         fd.append('type', 'picture');
-        fetch('<?= url("/user/apartment/upload") ?>', { method: 'POST', body: fd })
+        fetch('<?= url("/user/apartment/upload") ?>', {
+            method: 'POST',
+            body: fd
+          })
           .then(r => r.json())
-          .then(res => { if (!res.success) console.warn('Photo upload failed:', res.message); })
+          .then(res => {
+            if (!res.success) console.warn('Photo upload failed:', res.message);
+          })
           .catch(err => console.error('Photo upload error:', err));
       }
     });
@@ -3153,9 +3167,9 @@
       // Also upload to server → tenant_requirements
       const typeMap = {
         'doc-income': 'proofofincome',
-        'doc-id-front': 'governmentid',
-        'doc-id-back': 'governmentid',
-        'doc-birth': 'psa',
+        'doc-id-front': 'valididfront',
+        'doc-id-back': 'valididback',
+        'doc-birth': 'birthcert',
         'doc-nbi': 'nbi',
         'doc-photo': 'picture'
       };
@@ -3164,9 +3178,14 @@
         const fd = new FormData();
         fd.append('file', file);
         fd.append('type', serverType);
-        fetch('<?= url("/user/apartment/upload") ?>', { method: 'POST', body: fd })
+        fetch('<?= url("/user/apartment/upload") ?>', {
+            method: 'POST',
+            body: fd
+          })
           .then(r => r.json())
-          .then(res => { if (!res.success) console.warn('Server upload failed:', res.message); })
+          .then(res => {
+            if (!res.success) console.warn('Server upload failed:', res.message);
+          })
           .catch(err => console.error('Server upload error:', err));
       }
     }

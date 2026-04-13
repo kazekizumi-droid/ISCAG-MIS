@@ -2,11 +2,7 @@
 $info = $info ?? [];
 $account = $account ?? [];
 
-$display_name = $info['full_name'] ?? trim(($info['givenname'] ?? ($account['first_name'] ?? '')) . ' ' . ($info['familyname'] ?? ($account['last_name'] ?? '')));
-
-if (empty($display_name)) {
-    $display_name = trim(($account['first_name'] ?? '') . ' ' . ($account['last_name'] ?? ''));
-}
+$display_name = trim(($account['first_name'] ?? '') . ' ' . ($account['last_name'] ?? ''));
 
 $phpUser = [
     'name' => $display_name,
@@ -157,7 +153,7 @@ $phpUser = [
                         </svg>
                     </button>
                     <div class="nav-dropdown" id="damayan-menu">
-                        <a href="Damayan/user_burial-form.html">
+                        <a href="<?= url('/user/services/burial-form') ?>">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path
                                     d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
@@ -205,21 +201,21 @@ $phpUser = [
                         </svg>
                     </button>
                     <div class="nav-dropdown open" id="apartment-menu">
-                        <a href="Apartment/tenant_add_information_form.html">
+                        <a href="<?= url('/user/apartment/apply') ?>">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path
                                     d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
                             </svg>
                             Application Form
                         </a>
-                        <a href="Apartment/tenant_status.html">
+                        <a href="<?= url('/user/apartment/status') ?>">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path
                                     d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
                             </svg>
                             Application Status
                         </a>
-                        <a href="Apartment/apartment_information.html">
+                        <a href="<?= url('/user/apartment/info') ?>">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z" />
                             </svg>
@@ -702,12 +698,12 @@ $phpUser = [
         const dawahTrigger = document.getElementById('dawah-trigger');
         if (user.sex === 'Female') {
             dawahMenu.innerHTML = `
-            <a href="Da'awah/Female/user_form-female-counseling.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Sisters' Counseling</a>`;
-            if (dawahTrigger) dawahTrigger.setAttribute('data-href', "Da'awah/Female/user_form-female-counseling.html");
+            <a href="<?= url('/user/services/counseling-female') ?>"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Sisters' Counseling</a>`;
+            if (dawahTrigger) dawahTrigger.setAttribute('data-href', "<?= url('/user/services/counseling-female') ?>");
         } else {
             dawahMenu.innerHTML = `
-            <a href="Da'awah/Male/user_form-male-counseling.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Brothers' Counseling</a>`;
-            if (dawahTrigger) dawahTrigger.setAttribute('data-href', "Da'awah/Male/user_form-male-counseling.html");
+            <a href="<?= url('/user/services/counseling-male') ?>"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Brothers' Counseling</a>`;
+            if (dawahTrigger) dawahTrigger.setAttribute('data-href', "<?= url('/user/services/counseling-male') ?>");
         }
 
         // ── Populate form fields ──

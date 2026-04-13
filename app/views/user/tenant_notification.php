@@ -281,7 +281,7 @@
                     <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
                 </svg>
             </button>
-             <div class="sidebar-header">
+            <div class="sidebar-header">
                 <div class="sidebar-brand">
                     <img src="<?= asset('assets/logo.jpg') ?>" style="max-width:48px;max-height:48px;border-radius:8px;" alt="ISCAG" />
                     <div class="brand-text"><strong>ISCAG MIS</strong><span>User Portal</span></div>
@@ -318,7 +318,7 @@
                 <!-- DAMAYAN DROPDOWN -->
                 <div class="nav-dropdown-wrap" id="damayan-wrap">
                     <button class="nav-dropdown-trigger" id="damayan-trigger" data-tooltip="Damayan"
-                        data-href="Damayan/user_burial-form.html">
+                        data-href="<?= url('/user/services/burial-form') ?>">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
                         </svg>
@@ -333,7 +333,7 @@
                         </svg>
                     </button>
                     <div class="nav-dropdown" id="damayan-menu">
-                        <a href="Damayan/user_burial-form.html">
+                        <a href="<?= url('/user/services/burial-form') ?>">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path
                                     d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
@@ -381,21 +381,21 @@
                         </svg>
                     </button>
                     <div class="nav-dropdown open" id="apartment-menu">
-                        <a href="Apartment/tenant_add_information_form.html">
+                        <a href="<?= url('/user/apartment/apply') ?>">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path
                                     d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
                             </svg>
                             Application Form
                         </a>
-                        <a href="Apartment/tenant_status.html">
+                        <a href="<?= url('/user/apartment/status') ?>">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path
                                     d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
                             </svg>
                             Application Status
                         </a>
-                        <a href="Apartment/apartment_information.html">
+                        <a href="<?= url('/user/apartment/info') ?>">
                             <svg viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z" />
                             </svg>
@@ -458,8 +458,11 @@
         // Map notification type to a readable label
         function typeToLabel(type) {
             const map = {
-                system: 'System', approve: 'Approved', reject: 'Action Required',
-                assign: 'Room Assigned', request: 'Request Update'
+                system: 'System',
+                approve: 'Approved',
+                reject: 'Action Required',
+                assign: 'Room Assigned',
+                request: 'Request Update'
             };
             return map[type] || 'System';
         }
@@ -467,8 +470,10 @@
         // Map notification type to a source page label
         function typeToSourceLabel(type) {
             const map = {
-                system: 'View Application Status', approve: 'View Application Status',
-                reject: 'Go to Tenant Information', assign: 'View Room Assignment',
+                system: 'View Application Status',
+                approve: 'View Application Status',
+                reject: 'Go to Tenant Information',
+                assign: 'View Room Assignment',
                 request: 'View Request Details'
             };
             return map[type] || 'View Details';
@@ -570,7 +575,7 @@
       ` : '';
 
             detailView.innerHTML = `
-        <button class="btn-back" onclick="window.location.href='tenant_notification.html'">
+        <button class="btn-back" onclick="window.location.href='<?= url('/user/notifications') ?>'">
           <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
           Back to all notifications
         </button>
@@ -663,7 +668,9 @@
         document.getElementById('nav-name').textContent = user.name;
 
         // Verify user completeness
-        const { percentage } = getProfileCompletion(user);
+        const {
+            percentage
+        } = getProfileCompletion(user);
         const isComplete = percentage === 100;
 
         const navRole = document.getElementById('nav-role');
@@ -678,18 +685,18 @@
         if (dawahMenu && dawahTrigger) {
             if (user.gender === 'female') {
                 dawahMenu.innerHTML = `
-                <a href="Da'awah/Female/user_form-female-counseling.html">
+                <a href="<?= url('/user/services/counseling-female') ?>">
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
                     Sisters' Counseling
                 </a>`;
-                dawahTrigger.setAttribute('data-href', "Da'awah/Female/user_form-female-counseling.html");
+                dawahTrigger.setAttribute('data-href', "<?= url('/user/services/counseling-female') ?>");
             } else {
                 dawahMenu.innerHTML = `
-                <a href="Da'awah/Male/user_form-male-counseling.html">
+                <a href="<?= url('/user/services/counseling-male') ?>">
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
                     Brothers' Counseling
                 </a>`;
-                dawahTrigger.setAttribute('data-href', "Da'awah/Male/user_form-male-counseling.html");
+                dawahTrigger.setAttribute('data-href', "<?= url('/user/services/counseling-male') ?>");
             }
         }
 
@@ -710,6 +717,7 @@
 
         // Dropdown Click Handlers
         const _sidebar = document.getElementById('sidebar');
+
         function initDropdown(triggerId, menuId, wrapId) {
             const trigger = document.getElementById(triggerId);
             const menu = document.getElementById(menuId);

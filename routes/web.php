@@ -35,6 +35,7 @@ $routes = [
     '/user/apartment/info'   => ['ApartmentController', 'info'],
     '/user/apartment/save'   => ['ApartmentController', 'save'],
     '/user/apartment/upload' => ['ApartmentController', 'handleUpload'],
+    '/user/apartment/image'  => ['ApartmentController', 'serveImage'],
 
     // Service Modules (New)
     '/admin/apartment'  => ['AdminController', 'apartment'],

@@ -1204,10 +1204,10 @@
         // ── Da'wah dropdown ──
         const dawahMenu = document.getElementById('dawah-menu');
         dawahMenu.innerHTML = user.gender === 'female'
-            ? `<a href="../Female/counseling_female.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Sisters' Counseling</a>
-       <a href="../Female/islamic_edu_female.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>Sisters' Islamic Education</a>`
-            : `<a href="../Da'awah/counseling_male.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Brothers' Counseling</a>
-       <a href="../Da'awah/islamic_edu_male.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>Brothers' Islamic Education</a>`;
+            ? `<a href="<?= url('/user/services/counseling-female') ?>"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Sisters' Counseling</a>
+       <a href="<?= url('/user/services/islamic-edu-female') ?>"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>Sisters' Islamic Education</a>`
+            : `<a href="<?= url('/user/services/counseling-male') ?>"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Brothers' Counseling</a>
+       <a href="<?= url('/user/services/islamic-edu-male') ?>"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>Brothers' Islamic Education</a>`;
 
         // ── Sidebar collapse ──
         document.getElementById('sidebar-toggle').addEventListener('click', () => {

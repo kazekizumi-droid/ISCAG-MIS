@@ -16,7 +16,6 @@ class ApartmentApp {
     }
 
     public function saveInfo($userId, $data) {
-        // Whitelist only columns that exist in tenant_addinfo
         $allowed = [
             'familyname','givenname','middlename','muslimname',
             'civil_status','address','birthdate','pob','age','sex',
@@ -33,19 +32,28 @@ class ApartmentApp {
         }
         if (empty($safe)) return false;
 
-        $existing = $this->getInfo($userId);
-        if (!$existing) {
-            $safe['tenant_id'] = $userId;
-            $cols = implode(',', array_keys($safe));
-            $phs  = implode(',', array_map(fn($k) => ":$k", array_keys($safe)));
-            $sql  = "INSERT INTO tenant_addinfo ($cols) VALUES ($phs)";
-        } else {
-            $set = implode(',', array_map(fn($k) => "$k = :$k", array_keys($safe)));
-            $sql = "UPDATE tenant_addinfo SET $set WHERE tenant_id = :tenant_id";
-            $safe['tenant_id'] = $userId;
+        $this->db->beginTransaction();
+        try {
+            $existing = $this->getInfo($userId);
+            if (!$existing) {
+                $safe['tenant_id'] = $userId;
+                $cols = implode(',', array_keys($safe));
+                $phs  = implode(',', array_map(fn($k) => ":$k", array_keys($safe)));
+                $sql  = "INSERT INTO tenant_addinfo ($cols) VALUES ($phs)";
+            } else {
+                $set = implode(',', array_map(fn($k) => "$k = :$k", array_keys($safe)));
+                $sql = "UPDATE tenant_addinfo SET $set WHERE tenant_id = :tenant_id";
+                $safe['tenant_id'] = $userId;
+            }
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute($safe);
+            $this->db->commit();
+            return $result;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            error_log("saveInfo failed: " . $e->getMessage());
+            return false;
         }
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute($safe);
     }
 
     // ─── apartmentsapp (unit type) ────────────────────────
@@ -56,43 +64,96 @@ class ApartmentApp {
     }
 
     public function saveApplication($userId, $roomtype) {
-        $existing = $this->getApplication($userId);
-        if (!$existing) {
-            $sql = "INSERT INTO apartmentsapp (tenant_id, roomtype, date, status) VALUES (:uid, :rt, CURDATE(), 'Pending')";
-            $stmt = $this->db->prepare($sql);
-            return $stmt->execute(['uid' => $userId, 'rt' => $roomtype]);
-        } else {
-            $sql = "UPDATE apartmentsapp SET roomtype = :rt WHERE application_id = :aid";
-            $stmt = $this->db->prepare($sql);
-            return $stmt->execute(['rt' => $roomtype, 'aid' => $existing['application_id']]);
+        $this->db->beginTransaction();
+        try {
+            $existing = $this->getApplication($userId);
+            if (!$existing) {
+                $sql = "INSERT INTO apartmentsapp (tenant_id, roomtype, date, status) VALUES (:uid, :rt, CURDATE(), 'Pending')";
+                $stmt = $this->db->prepare($sql);
+                $result = $stmt->execute(['uid' => $userId, 'rt' => $roomtype]);
+            } else {
+                $sql = "UPDATE apartmentsapp SET roomtype = :rt WHERE application_id = :aid";
+                $stmt = $this->db->prepare($sql);
+                $result = $stmt->execute(['rt' => $roomtype, 'aid' => $existing['application_id']]);
+            }
+            $this->db->commit();
+            return $result;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            error_log("saveApplication failed: " . $e->getMessage());
+            return false;
         }
     }
 
-    // ─── tenant_requirements (uploads) ────────────────────
+    // ─── tenant_requirements (BLOB uploads) ───────────────
     public function getRequirements($userId) {
-        $stmt = $this->db->prepare("SELECT * FROM tenant_requirements WHERE tenant_id = :uid LIMIT 1");
+        $stmt = $this->db->prepare("SELECT requirement_id, tenant_id,
+            valididfront_mime, valididback_mime, birthcert_mime, nbi_mime, picture_mime, proofofincome_mime
+            FROM tenant_requirements WHERE tenant_id = :uid LIMIT 1");
         $stmt->execute(['uid' => $userId]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
     }
 
-    public function updateRequirement($userId, $type, $path) {
+    public function getRequirementImage($userId, $type) {
         $colMap = [
             'picture'       => 'picture',
-            'governmentid'  => 'governmentid',
-            'psa'           => 'psa',
+            'valididfront'  => 'valididfront',
+            'valididback'   => 'valididback',
+            'birthcert'     => 'birthcert',
+            'nbi'           => 'nbi',
+            'proofofincome' => 'proofofincome'
+        ];
+        $col = $colMap[$type] ?? null;
+        if (!$col) return null;
+
+        $mimeCol = $col . '_mime';
+        $stmt = $this->db->prepare("SELECT $col, $mimeCol FROM tenant_requirements WHERE tenant_id = :uid LIMIT 1");
+        $stmt->execute(['uid' => $userId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row && !empty($row[$col])) {
+            return ['data' => $row[$col], 'mime' => $row[$mimeCol] ?? 'image/jpeg'];
+        }
+        return null;
+    }
+
+    public function updateRequirement($userId, $type, $binaryData, $mimeType) {
+        $colMap = [
+            'picture'       => 'picture',
+            'valididfront'  => 'valididfront',
+            'valididback'   => 'valididback',
+            'birthcert'     => 'birthcert',
             'nbi'           => 'nbi',
             'proofofincome' => 'proofofincome'
         ];
         $col = $colMap[$type] ?? null;
         if (!$col) return false;
 
-        $existing = $this->getRequirements($userId);
-        if (!$existing) {
-            $sql = "INSERT INTO tenant_requirements (tenant_id, $col) VALUES (:uid, :path)";
-        } else {
-            $sql = "UPDATE tenant_requirements SET $col = :path WHERE tenant_id = :uid";
+        $mimeCol = $col . '_mime';
+
+        $this->db->beginTransaction();
+        try {
+            $stmt = $this->db->prepare("SELECT requirement_id FROM tenant_requirements WHERE tenant_id = :uid LIMIT 1");
+            $stmt->execute(['uid' => $userId]);
+            $existing = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$existing) {
+                $sql = "INSERT INTO tenant_requirements (tenant_id, $col, $mimeCol) VALUES (:uid, :data, :mime)";
+            } else {
+                $sql = "UPDATE tenant_requirements SET $col = :data, $mimeCol = :mime WHERE tenant_id = :uid";
+            }
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':uid', $userId, PDO::PARAM_INT);
+            $stmt->bindValue(':data', $binaryData, PDO::PARAM_LOB);
+            $stmt->bindValue(':mime', $mimeType, PDO::PARAM_STR);
+            $result = $stmt->execute();
+
+            $this->db->commit();
+            return $result;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            error_log("updateRequirement failed for $type: " . $e->getMessage());
+            return false;
         }
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute(['uid' => $userId, 'path' => $path]);
     }
 }

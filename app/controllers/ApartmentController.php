@@ -20,10 +20,6 @@ class ApartmentController extends Controller {
         $this->view('user/Apartment/apartment_information');
     }
 
-    /**
-     * POST /user/apartment/save
-     * Expects JSON with keys: addinfo (object), roomtype (string)
-     */
     public function save() {
         Auth::protectRole(['Applicant', 'Tenant']);
         header('Content-Type: application/json');
@@ -38,14 +34,12 @@ class ApartmentController extends Controller {
         $model = new ApartmentApp();
         $ok = true;
 
-        // 1. Save personal info → tenant_addinfo
         if (!empty($body['addinfo']) && is_array($body['addinfo'])) {
             if (!$model->saveInfo($userId, $body['addinfo'])) {
                 $ok = false;
             }
         }
 
-        // 2. Save unit preference → apartmentsapp
         if (!empty($body['roomtype'])) {
             if (!$model->saveApplication($userId, $body['roomtype'])) {
                 $ok = false;
@@ -55,10 +49,6 @@ class ApartmentController extends Controller {
         echo json_encode(['success' => $ok]);
     }
 
-    /**
-     * POST /user/apartment/upload
-     * Expects multipart form: file + type (picture|governmentid|psa|nbi|proofofincome)
-     */
     public function handleUpload() {
         Auth::protectRole(['Applicant', 'Tenant']);
         header('Content-Type: application/json');
@@ -72,7 +62,6 @@ class ApartmentController extends Controller {
 
         $file = $_FILES['file'];
 
-        // Validate
         $maxSize = 5 * 1024 * 1024;
         if ($file['size'] > $maxSize) {
             echo json_encode(['success' => false, 'message' => 'File too large (max 5 MB)']);
@@ -86,20 +75,44 @@ class ApartmentController extends Controller {
             return;
         }
 
-        $uploadDir = BASE_PATH . '/public/uploads/tenants/';
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-
-        $ext      = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $filename = $type . '_' . $userId . '_' . time() . '.' . $ext;
-        $target   = $uploadDir . $filename;
-        $dbPath   = 'uploads/tenants/' . $filename;
-
-        if (move_uploaded_file($file['tmp_name'], $target)) {
-            $model = new ApartmentApp();
-            $model->updateRequirement($userId, $type, $dbPath);
-            echo json_encode(['success' => true, 'path' => $dbPath]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to save file']);
+        $binaryData = file_get_contents($file['tmp_name']);
+        if ($binaryData === false) {
+            echo json_encode(['success' => false, 'message' => 'Failed to read file']);
+            return;
         }
+
+        $model = new ApartmentApp();
+        if ($model->updateRequirement($userId, $type, $binaryData, $mime)) {
+            echo json_encode(['success' => true, 'type' => $type]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to store in database']);
+        }
+    }
+
+    public function serveImage() {
+        Auth::protectRole(['Applicant', 'Tenant']);
+        $userId = $_SESSION['user_id'];
+        $type   = $_GET['type'] ?? '';
+
+        $allowed = ['picture','valididfront','valididback','birthcert','nbi','proofofincome'];
+        if (!in_array($type, $allowed)) {
+            http_response_code(400);
+            echo 'Invalid type';
+            return;
+        }
+
+        $model  = new ApartmentApp();
+        $result = $model->getRequirementImage($userId, $type);
+
+        if (!$result) {
+            http_response_code(404);
+            echo 'Image not found';
+            return;
+        }
+
+        header('Content-Type: ' . $result['mime']);
+        header('Content-Length: ' . strlen($result['data']));
+        header('Cache-Control: private, max-age=3600');
+        echo $result['data'];
     }
 }
