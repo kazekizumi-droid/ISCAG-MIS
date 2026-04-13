@@ -2561,6 +2561,47 @@
     // ═══ STEPPER NAVIGATION ═══
     let currentStep = 1;
 
+    // Collect all Step 1 fields and POST to server
+    function saveStep1ToServer() {
+      const v = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+      const unitRadio = document.querySelector('input[name="unit"]:checked');
+      const unitMap = { unit1: 'Studio', unit2: 'One-Bedroom', unit3: 'Two-Bedroom' };
+      const roomtype = unitRadio ? (unitMap[unitRadio.id] || 'Studio') : 'Studio';
+
+      const payload = {
+        addinfo: {
+          familyname:       v('family-name'),
+          givenname:        v('given-name'),
+          middlename:       v('mi'),
+          muslimname:       v('muslim-name'),
+          birthdate:        v('dob'),
+          age:              parseInt(v('age')) || 0,
+          pob:              v('pob'),
+          sex:              v('gender'),
+          address:          v('address'),
+          dateofshahadah:   v('shahadah-date'),
+          tribalaffliation: v('tribal'),
+          numofmuslim:      parseInt(v('muslim-count')) || 0,
+          civil_status:     v('civil-status'),
+          occupation:       v('occupation'),
+          companyname:      v('company'),
+          companyadd:       v('company-address'),
+          companyphone:     v('company-phone'),
+          ref_name:         v('ref-name'),
+          ref_contact:      v('ref-contact'),
+          iscag_students:   parseInt(v('iscag-students')) || 0,
+          date_applied:     v('date-application')
+        },
+        roomtype: roomtype
+      };
+
+      return fetch('<?= url("/user/apartment/save") ?>', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(r => r.json());
+    }
+
     function goToStep(step) {
       if (step === currentStep) return;
       // Validate Step 1 before moving to Step 2
@@ -2571,6 +2612,16 @@
           showToast('⚠️ Please check both declaration boxes before proceeding.', '#8b2e2e');
           return;
         }
+        // Save Step 1 data to server before transitioning
+        saveStep1ToServer()
+          .then(res => {
+            if (res.success) {
+              showToast('✓ Application info saved!', '#2f8a60');
+            } else {
+              showToast('⚠️ Could not save info: ' + (res.message || 'Unknown error'), '#8b2e2e');
+            }
+          })
+          .catch(err => console.error('Save error:', err));
       }
 
       currentStep = step;
@@ -2681,6 +2732,15 @@
           img.src = e.target.result;
         };
         reader.readAsDataURL(file);
+
+        // Upload 2x2 picture to server → tenant_requirements.picture
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('type', 'picture');
+        fetch('<?= url("/user/apartment/upload") ?>', { method: 'POST', body: fd })
+          .then(r => r.json())
+          .then(res => { if (!res.success) console.warn('Photo upload failed:', res.message); })
+          .catch(err => console.error('Photo upload error:', err));
       }
     });
 
@@ -3089,6 +3149,26 @@
         showToast('✓  Document uploaded successfully!', '#2f8a60');
       };
       reader.readAsDataURL(file);
+
+      // Also upload to server → tenant_requirements
+      const typeMap = {
+        'doc-income': 'proofofincome',
+        'doc-id-front': 'governmentid',
+        'doc-id-back': 'governmentid',
+        'doc-birth': 'psa',
+        'doc-nbi': 'nbi',
+        'doc-photo': 'picture'
+      };
+      const serverType = typeMap[docId];
+      if (serverType) {
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('type', serverType);
+        fetch('<?= url("/user/apartment/upload") ?>', { method: 'POST', body: fd })
+          .then(r => r.json())
+          .then(res => { if (!res.success) console.warn('Server upload failed:', res.message); })
+          .catch(err => console.error('Server upload error:', err));
+      }
     }
 
     function changeFile(docId) {
