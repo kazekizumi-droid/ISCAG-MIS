@@ -8,7 +8,7 @@ class AdminController extends Controller
     public function dashboard(): void
     {
         Auth::protectRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staff_Tenant']);
-        $this->view('admin/dashboard');
+        $this->view('dashboard');
     }
 
     public function apartment(): void

@@ -8,6 +8,6 @@ class UserController extends Controller
     public function dashboard(): void
     {
         Auth::protectRole(['Applicant', 'Tenant']);
-        $this->view('user/dashboard');
+        $this->view('dashboard');
     }
 }
