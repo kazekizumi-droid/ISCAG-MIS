@@ -414,6 +414,7 @@ $phpUser = [
             initialized: 'mis_data_init'
         };
         const PROFILE_FIELDS = ['name', 'email', 'gender', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName', 'revertYear'];
+        const FIELD_LABELS = { name: 'Full Name', email: 'Email Address', gender: 'Gender', phone: 'Contact Number', address: 'Complete Address', dob: 'Date of Birth', civil: 'Civil Status', occupation: 'Occupation', arabicName: 'Muslim / Arabic Name', revertYear: 'Year Reverted' };
         const DEFAULT_USER = {
             id: '<?= $_SESSION['user_id'] ?? "USR-001" ?>',
             name: '<?= addslashes($_SESSION['name'] ?? "User") ?>',
@@ -521,6 +522,48 @@ $phpUser = [
         function getRequests() {
             const raw = localStorage.getItem(STORAGE_KEYS.requests);
             return raw ? JSON.parse(raw) : [];
+        }
+
+        function getProfileCompletion() {
+            const user = getUser();
+            const missing = [];
+            let filled = 0;
+            PROFILE_FIELDS.forEach(k => {
+                if (user[k] && String(user[k]).trim() !== '') { filled++; } else { missing.push(FIELD_LABELS[k] || k); }
+            });
+            return { percentage: Math.round((filled / PROFILE_FIELDS.length) * 100), filled, total: PROFILE_FIELDS.length, missingFields: missing };
+        }
+
+        function showAccessModal(config) {
+            const existing = document.getElementById('access-control-modal');
+            if (existing) existing.remove();
+            
+            const { percentage = 0, missingFields = [], redirectUrl = '<?= url('/user/profile') ?>' } = config;
+            
+            if (!document.getElementById('acm-keyframes')) {
+                const styleEl = document.createElement('style');
+                styleEl.id = 'acm-keyframes';
+                styleEl.textContent = `@keyframes acmFadeIn { from { opacity:0; } to { opacity:1; } } @keyframes acmSlideUp { from { opacity:0;transform:translateY(24px) scale(0.96); } to { opacity:1;transform:translateY(0) scale(1); } }`;
+                document.head.appendChild(styleEl);
+            }
+            
+            const missingHtml = missingFields.length > 0 ? `<div style="margin-top:16px;text-align:left;"><p style="font-size:0.78rem;color:#6f7f78;margin:0 0 8px;font-weight:600;">Required information:</p><ul style="margin:0;padding:0 0 0 18px;font-size:0.8rem;color:#1f2e2a;line-height:1.8;">${missingFields.map(f => '<li>' + f + '</li>').join('')}</ul></div>` : '';
+            
+            const modalHtml = `<div id="access-control-modal" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(15,30,22,0.55);backdrop-filter:blur(6px);padding:24px;animation:acmFadeIn 0.3s ease;"><div style="background:white;border-radius:16px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,0.25);overflow:hidden;animation:acmSlideUp 0.35s ease;"><div style="height:4px;background:linear-gradient(90deg,#0f5c3a,#c79a2b);"></div><div style="padding:32px 28px 24px;text-align:center;"><div style="margin-bottom:8px;"><svg viewBox="0 0 24 24" style="width:48px;height:48px;fill:#c79a2b;"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg></div><div style="position:relative;width:80px;height:80px;margin:0 auto 16px;"><svg viewBox="0 0 36 36" style="width:80px;height:80px;transform:rotate(-90deg);"><circle cx="18" cy="18" r="15.9" fill="none" stroke="#e8ece9" stroke-width="3"/><circle cx="18" cy="18" r="15.9" fill="none" stroke="${percentage >= 40 ? '#c79a2b' : '#8b2e2e'}" stroke-width="3" stroke-dasharray="${percentage} ${100 - percentage}" stroke-linecap="round"/></svg><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:1.1rem;font-weight:700;color:#0f5c3a;">${percentage}%</span></div><h4 style="font-family:'Lora',serif;font-size:1.15rem;font-weight:700;color:#0f5c3a;margin:0 0 10px;">Please Complete Your Profile</h4><p style="font-size:0.87rem;color:#6f7f78;line-height:1.6;margin:0;">Kindly fill in all required fields to access this service. Your profile is currently <strong>${percentage}%</strong> complete.</p>${missingHtml}</div><div style="display:flex;gap:10px;padding:0 28px 24px;justify-content:center;"><button id="acm-cancel-btn" style="padding:10px 22px;border-radius:8px;border:1.5px solid #d9e3de;background:white;color:#6f7f78;font-size:0.85rem;font-weight:600;cursor:pointer;">Cancel</button><button id="acm-primary-btn" style="padding:10px 22px;border-radius:8px;border:none;background:linear-gradient(135deg,#0f5c3a,#2f8a60);color:white;font-size:0.85rem;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(15,92,58,0.3);">Go to Profile</button></div></div></div>`;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            const modal = document.getElementById('access-control-modal');
+            document.getElementById('acm-primary-btn').addEventListener('click', () => { window.location.href = redirectUrl; });
+            document.getElementById('acm-cancel-btn').addEventListener('click', () => {
+                modal.style.animation = 'acmFadeIn 0.2s ease reverse forwards';
+                setTimeout(() => modal.remove(), 200);
+            });
+            modal.addEventListener('click', e => {
+                if (e.target === modal) {
+                    modal.style.animation = 'acmFadeIn 0.2s ease reverse forwards';
+                    setTimeout(() => modal.remove(), 200);
+                }
+            });
         }
 
         // ══════════════════════════════════════════
@@ -1005,13 +1048,18 @@ $phpUser = [
         const sidebar = document.getElementById('sidebar');
         document.getElementById('sidebar-toggle').addEventListener('click', () => sidebar.classList.toggle('collapsed'));
 
-        // ── Lock/Unlock service dropdowns — always unlocked for logged-in users ──
+        // ── Lock/Unlock service dropdowns ──
         function applyDropdownLocks() {
+            const { percentage } = getProfileCompletion();
             const wraps = ['damayan-wrap', 'dawah-wrap', 'apartment-wrap'];
             wraps.forEach(id => {
                 const wrap = document.getElementById(id);
                 if (!wrap) return;
-                wrap.classList.remove('locked');
+                if (percentage === 100) {
+                    wrap.classList.remove('locked');
+                } else {
+                    wrap.classList.add('locked');
+                }
             });
         }
         applyDropdownLocks();
@@ -1021,18 +1069,18 @@ $phpUser = [
             const trigger = document.getElementById(triggerId);
             const menu = document.getElementById(menuId);
             const wrap = document.getElementById(wrapId);
-            trigger.addEventListener('click', () => {
-                // If locked, show toast prompting to complete profile
+            if (!trigger || !menu) return;
+            
+            trigger.addEventListener('click', (e) => {
+                // If locked, show modal prompting to complete profile
                 if (wrap && wrap.classList.contains('locked')) {
-                    showToast('🔒 Please complete your profile above to unlock this service.', '#c79a2b');
-                    // Scroll to the profile completion bar
-                    document.getElementById('completion-bar').scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
+                    e.preventDefault();
+                    const { percentage, missingFields } = getProfileCompletion();
+                    showAccessModal({ percentage, missingFields, redirectUrl: '<?= url('/user/profile') ?>' });
                     return;
                 }
                 if (sidebar && sidebar.classList.contains('collapsed')) {
+                    e.preventDefault();
                     const href = trigger.getAttribute('data-href');
                     if (href) window.location.href = href;
                     return;
