@@ -26,6 +26,7 @@ $routes = [
     // User
     '/user/dashboard'   => ['UserController',  'dashboard'],
     '/user/profile'     => ['UserController',  'profile'],
+    '/user/profile/update' => ['UserController', 'updateProfile'],
     '/user/notifications' => ['UserController', 'notifications'],
     '/logout'           => ['AuthController', 'logout'],
 

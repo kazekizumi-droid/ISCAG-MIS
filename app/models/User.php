@@ -133,4 +133,66 @@ class User
         $stmt->execute(['userId' => $userId]);
         return $stmt->fetch();
     }
+
+    /**
+     * Update user profile information across multiple tables.
+     */
+    public function updateProfile($userId, array $data): bool
+    {
+        try {
+            $this->db->beginTransaction();
+
+            // 1. Update core fields in tenant_accounts
+            $stmt1 = $this->db->prepare("
+                UPDATE {$this->table} 
+                SET email = :email, contactnum = :phone 
+                WHERE tenant_id = :userId
+            ");
+            $res1 = $stmt1->execute([
+                'email'  => $data['email'],
+                'phone'  => $data['phone'],
+                'userId' => $userId
+            ]);
+
+            // 2. Update additional info in tenant_addinfo
+            // We check if the record exists first; if not, we should probably create it
+            $stmtCheck = $this->db->prepare("SELECT COUNT(*) FROM tenant_addinfo WHERE tenant_id = :userId");
+            $stmtCheck->execute(['userId' => $userId]);
+            $exists = $stmtCheck->fetchColumn() > 0;
+
+            if ($exists) {
+                $stmt2 = $this->db->prepare("
+                    UPDATE tenant_addinfo 
+                    SET muslimname = :arabicName, 
+                        birthdate = :dob, 
+                        civil_status = :civil, 
+                        occupation = :occupation, 
+                        address = :address 
+                    WHERE tenant_id = :userId
+                ");
+            } else {
+                $stmt2 = $this->db->prepare("
+                    INSERT INTO tenant_addinfo (tenant_id, muslimname, birthdate, civil_status, occupation, address)
+                    VALUES (:userId, :arabicName, :dob, :civil, :occupation, :address)
+                ");
+            }
+
+            $res2 = $stmt2->execute([
+                'arabicName' => $data['arabicName'],
+                'dob'        => $data['dob'],
+                'civil'      => $data['civil'],
+                'occupation' => $data['occupation'],
+                'address'    => $data['address'],
+                'userId'     => $userId
+            ]);
+
+            return $this->db->commit();
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            error_log("Profile Update Error: " . $e->getMessage());
+            return false;
+        }
+    }
 }
