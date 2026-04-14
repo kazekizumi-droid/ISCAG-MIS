@@ -14,6 +14,8 @@
   --border: #e2e2e2;
   --txt: #111;
   --txt-2: #4a4a4a;
+  --danger: #d32f2f;
+  --danger-bg: #ffebee;
 }
 
 /* ─── RESET ─── */
@@ -167,7 +169,7 @@ body {
       <h1 class="dev-login-title">Log in</h1>
 
       <?php if (isset($error)): ?>
-        <div class="alert alert-danger" style="font-size: 13px; margin-bottom: 15px; color: var(--danger);"><?= $error ?></div>
+        <div class="alert alert-danger" style="font-size: 13px; margin-bottom: 15px; color: var(--danger); background: var(--danger-bg); padding: 10px; border-radius: 6px; border: 1px solid var(--danger);"><?= $error ?></div>
       <?php endif; ?>
 
       <?php if (isset($_GET['verified'])): ?>
