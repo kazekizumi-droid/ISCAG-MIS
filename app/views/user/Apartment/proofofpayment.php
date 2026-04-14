@@ -256,7 +256,7 @@
                 </div>
                 <div class="user-info">
                     <strong id="nav-name"><?= htmlspecialchars($_SESSION['name'] ?? 'User') ?></strong>
-                    <span id="nav-role"><?= htmlspecialchars($_SESSION['role'] ?? 'Verified User') ?></span>
+                    <span id="nav-role"><?= htmlspecialchars($_SESSION['role'] ?? 'User') ?></span>
                 </div>
             </div>
             <nav class="sidebar-nav">

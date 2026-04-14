@@ -642,14 +642,14 @@ $phpUser = [
             let user = raw ? JSON.parse(raw) : {
                 ...DEFAULT_USER
             };
-            
+
             // Sync with DB data if available
             Object.keys(DB_USER).forEach(key => {
                 if (DB_USER[key] && DB_USER[key] !== '') {
                     user[key] = DB_USER[key];
                 }
             });
-            
+
             return user;
         }
 
@@ -730,13 +730,13 @@ $phpUser = [
         const isProfileComplete = user.profileComplete;
         const navRole = document.getElementById('nav-role');
         if (navRole) {
-            navRole.textContent = isProfileComplete ? 'Verified User' : 'Not Verified';
+            navRole.textContent = isProfileComplete ? "<?= $_SESSION['role'] ?? 'Verified User' ?>" : 'Not Verified';
             navRole.style.color = isProfileComplete ? 'var(--success)' : 'var(--warning)';
         }
         const roleBadge = document.getElementById('role-badge');
         if (roleBadge) {
             if (isProfileComplete) {
-                roleBadge.innerHTML = '✅ Verified User';
+                roleBadge.innerHTML = '✅' + " <?= $_SESSION['role'] ?? 'Verified User' ?>";
                 roleBadge.style.background = 'rgba(23,107,69,0.1)';
                 roleBadge.style.color = 'var(--primary)';
             } else {
@@ -962,66 +962,68 @@ $phpUser = [
             modalSaveBtn.textContent = 'Saving...';
 
             fetch('<?= url('/user/profile/update') ?>', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams(data)
-            })
-            .then(response => response.json())
-            .then(res => {
-                if (res.success) {
-                    const updated = updateUser(data);
-                    
-                    // Update UI
-                    const navNameEl = document.getElementById('nav-name');
-                    if (navNameEl) navNameEl.textContent = updated.name;
-                    
-                    document.getElementById('profile-fullname').textContent = updated.name;
-                    document.getElementById('profile-email').textContent = updated.email || user.email;
-                    
-                    if (!localStorage.getItem('mis_user_photo')) {
-                        const initials = updated.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-                        avatarEl.textContent = initials;
-                        const navAvatar = document.getElementById('nav-avatar');
-                        if (navAvatar) navAvatar.textContent = initials;
-                    }
-                    
-                    if (updated.phone) document.getElementById('contact-phone').textContent = updated.phone;
-                    if (updated.address) document.getElementById('contact-address').textContent = updated.address;
-                    
-                    const completionFields = ['name', 'email', 'sex', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName'];
-                    const filled2 = completionFields.filter(k => updated[k] && String(updated[k]).trim() !== '').length;
-                    const pct2 = Math.round(filled2 / completionFields.length * 100);
-                    
-                    document.getElementById('completion-pct').textContent = pct2 + '%';
-                    const compBar = document.getElementById('completion-bar');
-                    if (compBar) {
-                        compBar.style.width = pct2 + '%';
-                        compBar.style.background = pct2 === 100 ? 'var(--success)' : pct2 >= 50 ? 'var(--warning)' : 'var(--danger)';
-                    }
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams(data)
+                })
+                .then(response => response.json())
+                .then(res => {
+                    if (res.success) {
+                        const updated = updateUser(data);
 
-                    if (pct2 === 100 && pct < 100) {
-                        showToast('🎉 Your profile has been successfully completed. You now have full access to all available departments.', 'var(--success)');
+                        // Update UI
+                        const navNameEl = document.getElementById('nav-name');
+                        if (navNameEl) navNameEl.textContent = updated.name;
+
+                        document.getElementById('profile-fullname').textContent = updated.name;
+                        document.getElementById('profile-email').textContent = updated.email || user.email;
+
+                        if (!localStorage.getItem('mis_user_photo')) {
+                            const initials = updated.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+                            avatarEl.textContent = initials;
+                            const navAvatar = document.getElementById('nav-avatar');
+                            if (navAvatar) navAvatar.textContent = initials;
+                        }
+
+                        if (updated.phone) document.getElementById('contact-phone').textContent = updated.phone;
+                        if (updated.address) document.getElementById('contact-address').textContent = updated.address;
+
+                        const completionFields = ['name', 'email', 'sex', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName'];
+                        const filled2 = completionFields.filter(k => updated[k] && String(updated[k]).trim() !== '').length;
+                        const pct2 = Math.round(filled2 / completionFields.length * 100);
+
+                        document.getElementById('completion-pct').textContent = pct2 + '%';
+                        const compBar = document.getElementById('completion-bar');
+                        if (compBar) {
+                            compBar.style.width = pct2 + '%';
+                            compBar.style.background = pct2 === 100 ? 'var(--success)' : pct2 >= 50 ? 'var(--warning)' : 'var(--danger)';
+                        }
+
+                        if (pct2 === 100 && pct < 100) {
+                            showToast('🎉 Your profile has been successfully completed. You now have full access to all available departments.', 'var(--success)');
+                        } else {
+                            showToast('✅ Profile updated successfully!', 'var(--success)');
+                        }
+
+                        closeModal(false);
+
+                        if (typeof window._afterProfileSave === 'function') {
+                            window._afterProfileSave(pct2);
+                        }
                     } else {
-                        showToast('✅ Profile updated successfully!', 'var(--success)');
+                        showToast('❌ Error: ' + res.message, 'var(--danger)');
                     }
-
-                    closeModal(false);
-                    
-                    if (typeof window._afterProfileSave === 'function') {
-                        window._afterProfileSave(pct2);
-                    }
-                } else {
-                    showToast('❌ Error: ' + res.message, 'var(--danger)');
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                showToast('❌ Failed to save profile to server.', 'var(--danger)');
-            })
-            .finally(() => {
-                modalSaveBtn.disabled = false;
-                modalSaveBtn.textContent = originalText;
-            });
+                })
+                .catch(err => {
+                    console.error(err);
+                    showToast('❌ Failed to save profile to server.', 'var(--danger)');
+                })
+                .finally(() => {
+                    modalSaveBtn.disabled = false;
+                    modalSaveBtn.textContent = originalText;
+                });
         });
 
         function showToast(msg, bg) {

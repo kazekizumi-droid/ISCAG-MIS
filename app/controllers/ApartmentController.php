@@ -115,4 +115,9 @@ class ApartmentController extends Controller {
         header('Cache-Control: private, max-age=3600');
         echo $result['data'];
     }
+
+    public function parking() {
+        Auth::protectRole(['Tenant']);
+        $this->view('user/Apartment/tenant_parking');
+    }
 }
