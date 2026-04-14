@@ -4,77 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ISCAG MIS — Burial Service Request</title>
-  <link rel="stylesheet" href="../../css/user-shared.css" />
+    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
 </head>
 <body>
 <div class="app-wrapper">
 
   <!-- ═══ SIDEBAR ═══ -->
-  <aside class="sidebar" id="sidebar">
-    <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">
-      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-    </button>
-    <div class="sidebar-header">
-      <div class="sidebar-brand">
-        <img src="../../../logo.jpg" style="max-width:48px;max-height:48px;border-radius:8px;" alt="ISCAG" />
-        <div class="brand-text"><strong>ISCAG MIS</strong><span>User Portal</span></div>
-      </div>
-    </div>
-    <div class="sidebar-user">
-      <div class="user-avatar" id="nav-avatar" style="background:var(--accent);">MU</div>
-      <div class="user-info"><strong id="nav-name">Muhammad Usman</strong><span id="nav-role">Not Verified</span></div>
-    </div>
-    <nav class="sidebar-nav">
-      <div class="nav-section-label">Menu</div>
-      <a href="../user-dashboard.html" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-        <span class="nav-item-label">My Dashboard</span>
-      </a>
-      <a href="../user_profile.html" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
-        <span class="nav-item-label">My Profile</span>
-      </a>
-      <div class="nav-section-label">Services</div>
-
-      <!-- DAMAYAN DROPDOWN -->
-      <div class="nav-dropdown-wrap">
-        <button class="nav-dropdown-trigger open" id="damayan-trigger">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
-          <span class="nav-item-label">Damayan</span>
-          <svg class="nav-dropdown-arrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-        </button>
-        <div class="nav-dropdown open" id="damayan-menu">
-          <a href="user_burial-form.html" style="color:white;font-weight:600;">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-            Burial Service
-          </a>
-        </div>
-      </div>
-
-      <!-- DA'WAH DROPDOWN -->
-      <div class="nav-dropdown-wrap">
-        <button class="nav-dropdown-trigger" id="dawah-trigger">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-          <span class="nav-item-label">Da'wah</span>
-          <svg class="nav-dropdown-arrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-        </button>
-        <div class="nav-dropdown" id="dawah-menu">
-          <!-- populated by JS based on gender -->
-        </div>
-      </div>
-
-      <a href="../Apartment/user_form-apartment.html" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4z"/></svg>
-        <span class="nav-item-label">Apartment</span>
-      </a>
-    </nav>
-    <div class="sidebar-footer">
-      <a href="../../../homepage/login.html" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-        <span class="nav-item-label">Logout</span>
-      </a>
-    </div>
-  </aside>
+  <?php 
+    $active_page = 'burial_service'; 
+    include BASE_PATH . '/app/views/user/sidebar.php'; 
+  ?>
 
   <!-- ═══ MAIN CONTENT ═══ -->
   <div class="main-content">
@@ -84,13 +23,13 @@
         <div class="top-bar-subtitle">Fill in all required information to submit a burial service request</div>
       </div>
       <div class="top-bar-actions">
-        <a href="../user-dashboard.html" class="btn-topbar">← Back to Dashboard</a>
+        <a href="<?= url('/user/dashboard') ?>" class="btn-topbar">← Back to Dashboard</a>
       </div>
     </div>
 
     <div class="page-body">
       <div class="breadcrumb-bar">
-        <a href="../user-dashboard.html">Dashboard</a>
+        <a href="<?= url('/user/dashboard') ?>">Dashboard</a>
         <span class="sep">›</span>
         <span class="current">Burial Service Request Form</span>
       </div>
@@ -226,7 +165,7 @@
           </div>
 
           <div class="form-submit-row">
-            <a href="../user-dashboard.html" class="btn-cancel">Cancel</a>
+            <a href="<?= url('/user/dashboard') ?>" class="btn-cancel">Cancel</a>
             <button class="btn-submit" type="button" id="submit-btn">Submit Burial Request</button>
           </div>
 
@@ -240,10 +179,17 @@
   // ── Inlined data helpers ──
   const STORAGE_KEYS = { user: 'mis_user', requests: 'mis_requests', apartments: 'mis_apartments', initialized: 'mis_data_init' };
   const PROFILE_FIELDS = ['name','email','gender','phone','address','dob','civil','occupation','arabicName','membership'];
-  const DEFAULT_USER = { id:'USR-001', name:'Muhammad Usman', email:'musman@example.com', gender:'', phone:'', address:'', dob:'', civil:'', occupation:'', arabicName:'', membership:'', revertYear:'', apartment:'', profileComplete:false };
+  const DEFAULT_USER = { 
+    id: '<?= $_SESSION['user_id'] ?? "USR-001" ?>', 
+    name: '<?= addslashes($_SESSION['name'] ?? "User") ?>', 
+    role: '<?= addslashes($_SESSION['role'] ?? "Tenant") ?>',
+    email:'<?= $_SESSION['email'] ?? "" ?>', 
+    gender:'<?= $_SESSION['gender'] ?? "" ?>', 
+    phone:'', address:'', dob:'', civil:'', occupation:'', arabicName:'', membership:'', revertYear:'', apartment:'', profileComplete:false 
+  };
   const DEFAULT_REQUESTS = [
-    { id:'BUR-001', user:'USR-001', type:'burial_service', status:'pending', date:'2026-03-15', updatedAt:'2026-03-15' },
-    { id:'APT-001', user:'USR-001', type:'apartment_application', status:'approved', date:'2026-03-09', updatedAt:'2026-03-12' }
+    { id:'BUR-001', user: DEFAULT_USER.id, type:'burial_service', status:'pending', date:'2026-03-15', updatedAt:'2026-03-15' },
+    { id:'APT-001', user: DEFAULT_USER.id, type:'apartment_application', status:'approved', date:'2026-03-09', updatedAt:'2026-03-12' }
   ];
 
   function initData() {
@@ -257,144 +203,23 @@
     const raw = localStorage.getItem(STORAGE_KEYS.user);
     return raw ? JSON.parse(raw) : { ...DEFAULT_USER };
   }
-  function getProfileCompletion() {
-    const user = getUser();
-    const missing = [];
-    let filled = 0;
-    const labels = { name:'Full Name', email:'Email Address', gender:'Gender', phone:'Contact Number', address:'Complete Address', dob:'Date of Birth', civil:'Civil Status', occupation:'Occupation', arabicName:'Muslim / Arabic Name', membership:'Masjid Membership' };
-    PROFILE_FIELDS.forEach(k => {
-      if (user[k] && String(user[k]).trim() !== '') { filled++; } else { missing.push(labels[k] || k); }
-    });
-    return { percentage: Math.round((filled / PROFILE_FIELDS.length) * 100), filled, total: PROFILE_FIELDS.length, missingFields: missing };
-  }
-  function addRequest(req) {
-    const raw = localStorage.getItem(STORAGE_KEYS.requests);
-    const requests = raw ? JSON.parse(raw) : [];
-    if (!req.id) req.id = 'BUR-' + String(requests.length + 1).padStart(3, '0');
-    if (!req.date) req.date = new Date().toISOString().split('T')[0];
-    if (!req.updatedAt) req.updatedAt = req.date;
-    if (!req.status) req.status = 'pending';
-    requests.push(req);
-    localStorage.setItem(STORAGE_KEYS.requests, JSON.stringify(requests));
-    return req;
-  }
 
   initData();
-
-  // ── Load user nav ──
   const user = getUser();
-  const navName = document.getElementById('nav-name');
-  const navAvatar = document.getElementById('nav-avatar');
-  if (navName) navName.textContent = user.name;
-  if (navAvatar) {
-    const photo = localStorage.getItem('mis_user_photo');
-    if (photo) {
-      navAvatar.textContent = '';
-      navAvatar.style.backgroundImage = 'url(' + photo + ')';
-      navAvatar.style.backgroundSize = 'cover';
-      navAvatar.style.backgroundPosition = 'center';
-    } else {
-      navAvatar.textContent = user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-    }
+
+  // ── Da'wah dropdown — Filter by gender ──
+  const dawahMenu = document.getElementById('dawah-menu');
+  const sessionGender = '<?= strtolower($_SESSION['gender'] ?? '') ?>';
+  if (sessionGender === 'female') {
+    dawahMenu.innerHTML = `<a href="<?= url('/user/services/counseling/female') ?>"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Sisters' Counseling</a>`;
+  } else {
+    dawahMenu.innerHTML = `<a href="<?= url('/user/services/counseling/male') ?>"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Brothers' Counseling</a>`;
   }
 
-  // ── Da'wah dropdown ──
-  const dawahMenu = document.getElementById('dawah-menu');
-  dawahMenu.innerHTML = user.gender === 'female'
-    ? `<a href="../Da'awah/Female/user_form-female-counseling.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Sisters' Counseling</a>`
-    : `<a href="../Da'awah/Male/user_form-male-counseling.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Brothers' Counseling</a>`;
-
-  // ── Profile access gate ──
-  const { percentage, missingFields } = getProfileCompletion();
-  if (percentage < 100) {
-    if (!document.getElementById('acm-keyframes')) {
-      const styleEl = document.createElement('style');
-      styleEl.id = 'acm-keyframes';
-      styleEl.textContent = `
-        @keyframes acmFadeIn { from { opacity:0; } to { opacity:1; } }
-        @keyframes acmSlideUp { from { opacity:0;transform:translateY(24px) scale(0.96); } to { opacity:1;transform:translateY(0) scale(1); } }
-      `;
-      document.head.appendChild(styleEl);
-    }
-
-    const missingHtml = missingFields.length > 0
-      ? `<div style="margin-top:16px;text-align:left;">
-           <p style="font-size:0.78rem;color:#6f7f78;margin:0 0 8px;font-weight:600;">The following information is still required:</p>
-           <ul style="margin:0;padding:0 0 0 18px;font-size:0.8rem;color:#1f2e2a;line-height:1.8;">
-             ${missingFields.map(f => '<li>' + f + '</li>').join('')}
-           </ul>
-         </div>` : '';
-
-    const modalHtml = `
-      <div id="access-control-modal" style="
-        position:fixed;inset:0;z-index:99999;
-        display:flex;align-items:center;justify-content:center;
-        background:rgba(15,30,22,0.55);backdrop-filter:blur(6px);
-        padding:24px;
-        animation:acmFadeIn 0.3s ease;
-      ">
-        <div style="
-          background:white;border-radius:16px;
-          width:100%;max-width:440px;
-          box-shadow:0 20px 60px rgba(0,0,0,0.25);
-          overflow:hidden;
-          animation:acmSlideUp 0.35s ease;
-        ">
-          <div style="height:4px;background:linear-gradient(90deg,#0f5c3a,#c79a2b);"></div>
-          <div style="padding:32px 28px 24px;text-align:center;">
-            <div style="margin-bottom:8px;">
-              <svg viewBox="0 0 24 24" style="width:48px;height:48px;fill:#c79a2b;">
-                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v6h-2V7zm0 8h2v2h-2v-2z"/>
-              </svg>
-            </div>
-            <div style="position:relative;width:80px;height:80px;margin:0 auto 16px;">
-              <svg viewBox="0 0 36 36" style="width:80px;height:80px;transform:rotate(-90deg);">
-                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e8ece9" stroke-width="3"/>
-                <circle cx="18" cy="18" r="15.9" fill="none" stroke="${percentage >= 40 ? '#c79a2b' : '#8b2e2e'}" stroke-width="3"
-                  stroke-dasharray="${percentage} ${100 - percentage}" stroke-linecap="round"
-                  style="transition:stroke-dasharray 0.8s ease;"/>
-              </svg>
-              <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:1.1rem;font-weight:700;color:#0f5c3a;">${percentage}%</span>
-            </div>
-            <h4 style="font-family:'Lora',serif;font-size:1.15rem;font-weight:700;color:#0f5c3a;margin:0 0 10px;">Profile Incomplete</h4>
-            <p style="font-size:0.87rem;color:#6f7f78;line-height:1.6;margin:0;">Access to this section is restricted until your profile is fully completed. Please update the required information to continue.</p>
-            ${missingHtml}
-          </div>
-          <div style="display:flex;gap:10px;padding:0 28px 24px;justify-content:center;">
-            <button id="acm-cancel-btn" style="
-              padding:10px 22px;border-radius:8px;
-              border:1.5px solid #d9e3de;background:white;
-              color:#6f7f78;font-size:0.85rem;font-weight:600;
-              cursor:pointer;transition:all 0.18s;
-            ">Cancel</button>
-            <button id="acm-primary-btn" style="
-              padding:10px 22px;border-radius:8px;
-              border:none;
-              background:linear-gradient(135deg,#0f5c3a,#2f8a60);
-              color:white;font-size:0.85rem;font-weight:700;
-              cursor:pointer;transition:all 0.18s;
-              box-shadow:0 4px 12px rgba(15,92,58,0.3);
-            ">Go to Profile</button>
-          </div>
-        </div>
-      </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-    const modal = document.getElementById('access-control-modal');
-    document.getElementById('acm-primary-btn').addEventListener('click', () => {
-      window.location.href = '../user_profile.html';
-    });
-    document.getElementById('acm-cancel-btn').addEventListener('click', () => {
-      modal.style.animation = 'acmFadeIn 0.2s ease reverse forwards';
-      setTimeout(() => modal.remove(), 200);
-    });
-    modal.addEventListener('click', e => {
-      if (e.target === modal) {
-        modal.style.animation = 'acmFadeIn 0.2s ease reverse forwards';
-        setTimeout(() => modal.remove(), 200);
-      }
-    });
+  // ── Profile access gate (Server Side Check) ──
+  const SESSION_ROLE = '<?= htmlspecialchars($_SESSION['role'] ?? '') ?>';
+  if (SESSION_ROLE === '') {
+    window.location.href = '<?= url('/user/profile') ?>';
   }
 
   // ── Sidebar collapse ──
@@ -415,6 +240,7 @@
   }
   initDropdown('damayan-trigger', 'damayan-menu');
   initDropdown('dawah-trigger', 'dawah-menu');
+  initDropdown('apartment-trigger', 'apartment-menu');
 
   // ── Submit button ──
   document.getElementById('submit-btn').addEventListener('click', (e) => {
@@ -455,7 +281,7 @@
           <p style="
             font-size:0.85rem;color:var(--text-muted);line-height:1.7;margin:0 0 24px;
           ">Your burial service request has been received and is now under review. You will be notified once it has been processed.</p>
-          <a href="../user-dashboard.html" style="
+          <a href="<?= url('/user/dashboard') ?>" style="
             display:inline-block;padding:10px 24px;border-radius:8px;
             background:linear-gradient(135deg,var(--primary-dark),var(--primary-light));
             color:white;font-size:0.85rem;font-weight:700;

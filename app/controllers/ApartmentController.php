@@ -82,7 +82,17 @@ class ApartmentController extends Controller {
         }
 
         $model = new ApartmentApp();
-        if ($model->updateRequirement($userId, $type, $binaryData, $mime)) {
+        $info = $model->getInfo($userId);
+        
+        if (empty($info)) {
+            // Need a dummy record or they should have completed Step 1
+            $infoId = $model->saveInfo($userId, []); // Creates an empty addinfo record
+            $infoId = $infoId ?: $model->getInfo($userId)['tenant_info']; 
+        } else {
+             $infoId = $info['tenant_info'];
+        }
+
+        if ($model->saveInfoImage($infoId, $type, $binaryData, $mime)) {
             echo json_encode(['success' => true, 'type' => $type]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to store in database']);
@@ -102,9 +112,17 @@ class ApartmentController extends Controller {
         }
 
         $model  = new ApartmentApp();
-        $result = $model->getRequirementImage($userId, $type);
+        $info = $model->getInfo($userId);
+        if (empty($info)) {
+            http_response_code(404);
+            echo 'Image not found';
+            return;
+        }
+        $infoId = $info['tenant_info'];
+        $result = $model->getAddInfoImage($infoId, $type);
 
         if (!$result) {
+            // Fallback to legacy tenant_requirements if needed? No, let's just 404
             http_response_code(404);
             echo 'Image not found';
             return;

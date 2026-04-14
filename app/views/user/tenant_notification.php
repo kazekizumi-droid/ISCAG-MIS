@@ -275,145 +275,7 @@
     <div class="app-wrapper">
 
         <!-- ═══ SIDEBAR ═══ -->
-        <aside class="sidebar" id="sidebar">
-            <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">
-                <svg viewBox="0 0 24 24">
-                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-                </svg>
-            </button>
-            <div class="sidebar-header">
-                <div class="sidebar-brand">
-                    <img src="<?= asset('assets/logo.jpg') ?>" style="max-width:48px;max-height:48px;border-radius:8px;" alt="ISCAG" />
-                    <div class="brand-text"><strong>ISCAG MIS</strong><span>User Portal</span></div>
-                </div>
-            </div>
-            <div class="sidebar-user">
-                <div class="user-avatar" id="nav-avatar" style="background:var(--accent);">MU</div>
-                <div class="user-info"><strong id="nav-name">User</strong><span id="nav-role">Not Verified</span></div>
-            </div>
-            <nav class="sidebar-nav">
-                <div class="nav-section-label">Menu</div>
-                <a href="<?= url('/user/dashboard') ?>" class="nav-item" data-tooltip="Dashboard">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
-                    </svg>
-                    <span class="nav-item-label">My Dashboard</span>
-                </a>
-                <a href="<?= url('/user/profile') ?>" class="nav-item" data-tooltip="Profile">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-                    </svg>
-                    <span class="nav-item-label">My Profile</span>
-                </a>
-                <a href="<?= url('/user/notifications') ?>" class="nav-item active" data-tooltip="Notifications">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
-                    </svg>
-                    <span class="nav-item-label">Notifications</span>
-                </a>
-                <div class="nav-section-label">Services</div>
-
-                <!-- DAMAYAN DROPDOWN -->
-                <div class="nav-dropdown-wrap" id="damayan-wrap">
-                    <button class="nav-dropdown-trigger" id="damayan-trigger" data-tooltip="Damayan"
-                        data-href="<?= url('/user/services/burial-form') ?>">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-                        </svg>
-                        <span class="nav-item-label">Damayan</span>
-                        <span class="nav-lock-badge">Locked</span>
-                        <svg class="nav-lock-icon" viewBox="0 0 24 24">
-                            <path
-                                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z" />
-                        </svg>
-                        <svg class="nav-dropdown-arrow" viewBox="0 0 24 24">
-                            <path d="M7 10l5 5 5-5z" />
-                        </svg>
-                    </button>
-                    <div class="nav-dropdown" id="damayan-menu">
-                        <a href="<?= url('/user/services/burial-form') ?>">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                            </svg>
-                            Burial Service
-                        </a>
-                    </div>
-                </div>
-
-                <!-- DA'WAH DROPDOWN -->
-                <div class="nav-dropdown-wrap" id="dawah-wrap">
-                    <button class="nav-dropdown-trigger" id="dawah-trigger" data-tooltip="Da'wah">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
-                        </svg>
-                        <span class="nav-item-label">Da'wah</span>
-                        <span class="nav-lock-badge">Locked</span>
-                        <svg class="nav-lock-icon" viewBox="0 0 24 24">
-                            <path
-                                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z" />
-                        </svg>
-                        <svg class="nav-dropdown-arrow" viewBox="0 0 24 24">
-                            <path d="M7 10l5 5 5-5z" />
-                        </svg>
-                    </button>
-                    <div class="nav-dropdown" id="dawah-menu">
-                        <!-- populated by JS based on gender -->
-                    </div>
-                </div>
-
-                <!-- APARTMENT DROPDOWN -->
-                <div class="nav-dropdown-wrap" id="apartment-wrap">
-                    <button class="nav-dropdown-trigger" id="apartment-trigger" data-tooltip="Apartment">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4z" />
-                        </svg>
-                        <span class="nav-item-label">Apartment</span>
-                        <span class="nav-lock-badge">Locked</span>
-                        <svg class="nav-lock-icon" viewBox="0 0 24 24">
-                            <path
-                                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z" />
-                        </svg>
-                        <svg class="nav-dropdown-arrow" viewBox="0 0 24 24">
-                            <path d="M7 10l5 5 5-5z" />
-                        </svg>
-                    </button>
-                    <div class="nav-dropdown open" id="apartment-menu">
-                        <a href="<?= url('/user/apartment/apply') ?>">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
-                            </svg>
-                            Application Form
-                        </a>
-                        <a href="<?= url('/user/apartment/status') ?>">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
-                            </svg>
-                            Application Status
-                        </a>
-                        <a href="<?= url('/user/apartment/info') ?>">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z" />
-                            </svg>
-                            Apartment Information
-                        </a>
-                    </div>
-                </div>
-            </nav>
-            <div class="sidebar-footer">
-                <a href="<?= url('/logout') ?>" class="nav-item" data-tooltip="Logout">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
-                    </svg>
-                    <span class="nav-item-label">Logout</span>
-                </a>
-            </div>
-        </aside>
+        <?php $active_page = 'notifications'; include BASE_PATH . '/app/views/user/sidebar.php'; ?>
 
         <div class="main-content">
             <div class="top-bar">
@@ -667,50 +529,52 @@
 
         document.getElementById('nav-name').textContent = user.name;
 
-        // Verify user completeness
-        const {
-            percentage
-        } = getProfileCompletion(user);
-        const isComplete = percentage === 100;
+        // ── Role label: use SESSION data (injected by sidebar sync) ──
+        // The sidebar already rendered the correct PHP role; here we just
+        // style it green. Lock state also comes from session, not localStorage.
+        const SESSION_ROLE   = '<?= htmlspecialchars($_SESSION['role'] ?? '') ?>';
+        const SESSION_GENDER = '<?= htmlspecialchars($_SESSION['gender'] ?? '') ?>';
+
+        // Services are unlocked when user has a real role (Applicant / Tenant)
+        const isComplete = SESSION_ROLE !== '';
 
         const navRole = document.getElementById('nav-role');
         if (navRole) {
-            navRole.textContent = isComplete ? "<?= $_SESSION['role'] ?? 'Verified User' ?>" : 'Not Verified';
-            navRole.style.color = isComplete ? 'var(--success)' : 'var(--warning)';
+            // Sidebar PHP already set textContent from $_SESSION['role'];
+            // just ensure the colour is green.
+            navRole.style.color = 'var(--success)';
         }
 
-        // Da'wah dropdown dynamic path
-        const dawahMenu = document.getElementById('dawah-menu');
+        // Da'wah dropdown dynamic path based on SESSION gender
+        const dawahMenu    = document.getElementById('dawah-menu');
         const dawahTrigger = document.getElementById('dawah-trigger');
         if (dawahMenu && dawahTrigger) {
-            if (user.gender === 'female') {
+            const genderLower = SESSION_GENDER.toLowerCase();
+            if (genderLower === 'female') {
                 dawahMenu.innerHTML = `
-                <a href="<?= url('/user/services/counseling-female') ?>">
+                <a href="<?= url('/user/services/counseling/female') ?>">
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
                     Sisters' Counseling
                 </a>`;
-                dawahTrigger.setAttribute('data-href', "<?= url('/user/services/counseling-female') ?>");
+                dawahTrigger.setAttribute('data-href', "<?= url('/user/services/counseling/female') ?>");
             } else {
                 dawahMenu.innerHTML = `
-                <a href="<?= url('/user/services/counseling-male') ?>">
+                <a href="<?= url('/user/services/counseling/male') ?>">
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
                     Brothers' Counseling
                 </a>`;
-                dawahTrigger.setAttribute('data-href', "<?= url('/user/services/counseling-male') ?>");
+                dawahTrigger.setAttribute('data-href', "<?= url('/user/services/counseling/male') ?>");
             }
         }
 
-        // Dropdown Lock Logic
+        // Dropdown Lock Logic — unlock for any authenticated session user
         function applyDropdownLocks() {
             const wraps = ['damayan-wrap', 'dawah-wrap', 'apartment-wrap'];
             wraps.forEach(id => {
                 const wrap = document.getElementById(id);
                 if (!wrap) return;
-                if (isComplete) {
-                    wrap.classList.remove('locked');
-                } else {
-                    wrap.classList.add('locked');
-                }
+                // Always unlocked for logged-in Applicant / Tenant roles
+                wrap.classList.remove('locked');
             });
         }
         applyDropdownLocks();
@@ -726,7 +590,7 @@
             trigger.addEventListener('click', () => {
                 if (wrap && wrap.classList.contains('locked')) {
                     showToast('🔒 Please complete your profile to unlock services.', '#c79a2b');
-                    setTimeout(() => window.location.href = 'tenant_account.html?edit=true', 1000);
+                    setTimeout(() => window.location.href = '<?= url('/user/profile') ?>', 1000);
                     return;
                 }
                 if (_sidebar && _sidebar.classList.contains('collapsed')) {

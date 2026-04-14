@@ -643,7 +643,10 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
 
       <div class="sidebar-user">
         <div class="user-avatar">
-          <?= strtoupper(substr($_SESSION['name'] ?? 'A', 0, 2)) ?>
+          <?php
+            $admin_name_parts = explode(' ', trim($_SESSION['name'] ?? 'Admin'));
+            echo strtoupper(substr($admin_name_parts[0], 0, 1) . (count($admin_name_parts) > 1 ? substr(end($admin_name_parts), 0, 1) : ''));
+          ?>
         </div>
         <div class="user-info">
           <strong><?= htmlspecialchars($_SESSION['name'] ?? 'Admin') ?></strong>
@@ -822,13 +825,14 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
       $dbUser = [
           'name' => $info['full_name'] ?? trim(($account['first_name'] ?? '') . ' ' . ($account['last_name'] ?? '')),
           'email' => $info['email'] ?? ($account['email'] ?? ''),
-          'sex' => $info['sex'] ?? ($account['sex'] ?? ''),
+          'gender' => $info['sex'] ?? ($account['sex'] ?? ''),
           'phone' => $info['phone'] ?? ($account['contactnum'] ?? ''),
-          'dob' => $info['dob'] ?? '',
+          'dob' => $info['birthdate'] ?? '',
           'civil' => $info['civil_status'] ?? '',
           'address' => $info['address'] ?? '',
           'occupation' => $info['occupation'] ?? '',
-          'arabicName' => $info['muslim_name'] ?? '',
+          'arabicName' => $info['muslimname'] ?? '',
+          'revertYear' => !empty($info['dateofshahadah']) ? date('Y', strtotime($info['dateofshahadah'])) : '',
       ];
   }
 ?>
@@ -904,149 +908,10 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
   <div class="app-wrapper">
 
     <!-- ═══ SIDEBAR ═══ -->
-    <aside class="sidebar" id="sidebar">
-      <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">
-        <svg viewBox="0 0 24 24">
-          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-        </svg>
-      </button>
-      <div class="sidebar-header">
-        <div class="sidebar-brand">
-          <img src="<?= asset('assets/logo.jpg') ?>" style="max-width:48px;max-height:48px;border-radius:8px;" alt="ISCAG" />
-          <div class="brand-text"><strong>ISCAG MIS</strong><span>User Portal</span></div>
-        </div>
-      </div>
-      <div class="sidebar-user">
-        <div class="user-avatar" id="nav-avatar" style="background:var(--accent);">
-          <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 2)) ?>
-        </div>
-        <div class="user-info">
-          <strong id="nav-name"><?= htmlspecialchars($_SESSION['name'] ?? 'User') ?></strong>
-          <span id="nav-role"><?= htmlspecialchars($_SESSION['role'] ?? 'Verified User') ?></span>
-        </div>
-      </div>
-      <nav class="sidebar-nav">
-        <div class="nav-section-label">Menu</div>
-        <a href="<?= url('/user/dashboard') ?>" class="nav-item active" data-tooltip="Dashboard">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
-          </svg>
-          <span class="nav-item-label">My Dashboard</span>
-        </a>
-        <a href="<?= url('/user/profile') ?>" class="nav-item" data-tooltip="Profile">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-          </svg>
-          <span class="nav-item-label">My Profile</span>
-        </a>
-        <a href="<?= url('/user/notifications') ?>" class="nav-item" data-tooltip="Notifications">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
-          </svg>
-          <span class="nav-item-label">Notifications</span>
-        </a>
-        <div class="nav-section-label">Services</div>
-
-        <!-- DAMAYAN DROPDOWN -->
-        <div class="nav-dropdown-wrap" id="damayan-wrap">
-          <button class="nav-dropdown-trigger" id="damayan-trigger" data-tooltip="Damayan"
-            data-href="<?= url('/user/services/burial-form') ?>">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-            </svg>
-            <span class="nav-item-label">Damayan</span>
-            <span class="nav-lock-badge">Locked</span>
-            <svg class="nav-lock-icon" viewBox="0 0 24 24">
-              <path
-                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z" />
-            </svg>
-            <svg class="nav-dropdown-arrow" viewBox="0 0 24 24">
-              <path d="M7 10l5 5 5-5z" />
-            </svg>
-          </button>
-          <div class="nav-dropdown" id="damayan-menu">
-            <a href="<?= url('/user/services/burial-form') ?>">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-              </svg>
-              Burial Service
-            </a>
-          </div>
-        </div>
-
-        <!-- DA'WAH DROPDOWN -->
-        <div class="nav-dropdown-wrap" id="dawah-wrap">
-          <button class="nav-dropdown-trigger" id="dawah-trigger" data-tooltip="Da'wah">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
-            </svg>
-            <span class="nav-item-label">Da'wah</span>
-            <span class="nav-lock-badge">Locked</span>
-            <svg class="nav-lock-icon" viewBox="0 0 24 24">
-              <path
-                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z" />
-            </svg>
-            <svg class="nav-dropdown-arrow" viewBox="0 0 24 24">
-              <path d="M7 10l5 5 5-5z" />
-            </svg>
-          </button>
-          <div class="nav-dropdown" id="dawah-menu">
-            <!-- populated by JS based on gender -->
-          </div>
-        </div>
-
-        <!-- APARTMENT DROPDOWN -->
-        <div class="nav-dropdown-wrap" id="apartment-wrap">
-          <button class="nav-dropdown-trigger" id="apartment-trigger" data-tooltip="Apartment">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4z" />
-            </svg>
-            <span class="nav-item-label">Apartment</span>
-            <span class="nav-lock-badge">Locked</span>
-            <svg class="nav-lock-icon" viewBox="0 0 24 24">
-              <path
-                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z" />
-            </svg>
-            <svg class="nav-dropdown-arrow" viewBox="0 0 24 24">
-              <path d="M7 10l5 5 5-5z" />
-            </svg>
-          </button>
-          <div class="nav-dropdown open" id="apartment-menu">
-            <a href="<?= url('/user/apartment/apply') ?>">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
-              </svg>
-              Application Form
-            </a>
-            <a href="<?= url('/user/apartment/status') ?>">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
-              </svg>
-              Application Status
-            </a>
-            <a href="<?= url('/user/apartment/info') ?>">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z" />
-              </svg>
-              Apartment Information
-            </a>
-          </div>
-        </div>
-      </nav>
-      <div class="sidebar-footer">
-        <a href="<?= url('/logout') ?>" class="nav-item" data-tooltip="Logout">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
-          </svg>
-          <span class="nav-item-label">Logout</span>
-        </a>
-      </div>
-    </aside>
+    <?php 
+      $active_page = 'dashboard';
+      include 'user/sidebar.php'; 
+    ?>
 
     <!-- ═══ MAIN CONTENT ═══ -->
     <div class="main-content">
@@ -1132,9 +997,15 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
     // ── Inlined data helpers (no module imports — works from file://) ──
     const STORAGE_KEYS = { user: 'mis_user', requests: 'mis_requests', apartments: 'mis_apartments', initialized: 'mis_data_init' };
     const DB_USER = <?= json_encode($dbUser) ?>;
-    const PROFILE_FIELDS = ['name', 'email', 'sex', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName'];
-    const FIELD_LABELS = { name: 'Full Name', email: 'Email Address', sex: 'Sex', phone: 'Contact Number', address: 'Complete Address', dob: 'Date of Birth', civil: 'Civil Status', occupation: 'Occupation', arabicName: 'Muslim / Arabic Name' };
-    const DEFAULT_USER = { id: 'USR-001', name: 'User', email: 'user@example.com', sex: '', phone: '', address: '', dob: '', civil: '', occupation: '', arabicName: '', revertYear: '', apartment: '', profileComplete: false };
+    const PROFILE_FIELDS = ['name', 'email', 'gender', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName', 'revertYear'];
+    const FIELD_LABELS = { name: 'Full Name', email: 'Email Address', gender: 'Gender', phone: 'Contact Number', address: 'Complete Address', dob: 'Date of Birth', civil: 'Civil Status', occupation: 'Occupation', arabicName: 'Muslim / Arabic Name', revertYear: 'Year Reverted' };
+    const DEFAULT_USER = {
+      id: '<?= $_SESSION['user_id'] ?? "USR-001" ?>',
+      name: '<?= addslashes($_SESSION['name'] ?? "User") ?>',
+      email: '<?= addslashes($_SESSION['email'] ?? "") ?>',
+      gender: '<?= addslashes($_SESSION['gender'] ?? "") ?>',
+      phone: '', address: '', dob: '', civil: '', occupation: '', arabicName: '', membership: '', revertYear: '', apartment: '', profileComplete: false
+    };
     const DEFAULT_REQUESTS = [
       { id: 'BUR-001', user: 'USR-001', type: 'burial_service', status: 'pending', date: '2026-03-15', updatedAt: '2026-03-15' },
       { id: 'APT-001', user: 'USR-001', type: 'apartment_application', status: 'approved', date: '2026-03-09', updatedAt: '2026-03-12' }
@@ -1157,13 +1028,14 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
     }
     function getUser() {
       const raw = localStorage.getItem(STORAGE_KEYS.user);
-      const user = raw ? JSON.parse(raw) : { ...DEFAULT_USER };
+      const user = raw ? JSON.parse(raw) : {
+        ...DEFAULT_USER
+      };
 
-      // Synchronize with DB data if available
-      PROFILE_FIELDS.forEach(key => {
-        if (DB_USER[key] && DB_USER[key] !== '') {
-          user[key] = DB_USER[key];
-        }
+      // Synchronize with DB data — DB is the source of truth.
+      // Even if empty, we overwrite localStorage/Mock defaults.
+      Object.keys(DB_USER).forEach(key => {
+        user[key] = DB_USER[key] || '';
       });
       return user;
     }

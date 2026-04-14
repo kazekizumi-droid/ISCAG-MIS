@@ -7,14 +7,14 @@ $display_name = trim(($account['first_name'] ?? '') . ' ' . ($account['last_name
 $phpUser = [
     'name' => $display_name,
     'email' => $info['email'] ?? ($account['email'] ?? ''),
-    'sex' => $info['sex'] ?? ($account['sex'] ?? ''),
+    'gender' => $info['sex'] ?? ($account['sex'] ?? ''),
     'phone' => $info['phone'] ?? ($account['contactnum'] ?? ''),
-    'dob' => $info['dob'] ?? '',
+    'dob' => $info['birthdate'] ?? '',
     'civil' => $info['civil_status'] ?? '',
     'address' => $info['address'] ?? '',
     'occupation' => $info['occupation'] ?? '',
     'arabicName' => $info['muslimname'] ?? '',
-    'revertYear' => $info['revert_year'] ?? '',
+    'revertYear' => !empty($info['dateofshahadah']) ? date('Y', strtotime($info['dateofshahadah'])) : '',
 ];
 ?>
 <!DOCTYPE html>
@@ -90,150 +90,7 @@ $phpUser = [
 <body>
     <div class="app-wrapper">
 
-        <aside class="sidebar" id="sidebar">
-            <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">
-                <svg viewBox="0 0 24 24">
-                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-                </svg>
-            </button>
-            <div class="sidebar-header">
-                <div class="sidebar-brand">
-                    <img src="<?= asset('assets/logo.jpg') ?>" style="max-width:48px;max-height:48px;border-radius:8px;" alt="ISCAG" />
-                    <div class="brand-text"><strong>ISCAG MIS</strong><span>User Portal</span></div>
-                </div>
-            </div>
-            <div class="sidebar-user">
-                <div class="user-avatar" id="nav-avatar" style="background:var(--accent);">
-                    <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 2)) ?>
-                </div>
-                <div class="user-info">
-                    <strong id="nav-name"><?= htmlspecialchars($_SESSION['name'] ?? 'User') ?></strong>
-                    <span id="nav-role"><?= htmlspecialchars($_SESSION['role'] ?? 'Verified User') ?></span>
-                </div>
-            </div>
-            <nav class="sidebar-nav">
-                <div class="nav-section-label">Menu</div>
-                <a href="<?= url('/user/dashboard') ?>" class="nav-item" data-tooltip="Dashboard">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
-                    </svg>
-                    <span class="nav-item-label">My Dashboard</span>
-                </a>
-                <a href="<?= url('/user/profile') ?>" class="nav-item active" data-tooltip="Profile">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-                    </svg>
-                    <span class="nav-item-label">My Profile</span>
-                </a>
-                <a href="<?= url('/user/notifications') ?>" class="nav-item" data-tooltip="Notifications">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
-                    </svg>
-                    <span class="nav-item-label">Notifications</span>
-                </a>
-                <div class="nav-section-label">Services</div>
-
-                <!-- DAMAYAN DROPDOWN -->
-                <div class="nav-dropdown-wrap" id="damayan-wrap">
-                    <button class="nav-dropdown-trigger" id="damayan-trigger" data-tooltip="Damayan"
-                        data-href="Damayan/user_burial-form.html">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-                        </svg>
-                        <span class="nav-item-label">Damayan</span>
-                        <span class="nav-lock-badge">Locked</span>
-                        <svg class="nav-lock-icon" viewBox="0 0 24 24">
-                            <path
-                                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z" />
-                        </svg>
-                        <svg class="nav-dropdown-arrow" viewBox="0 0 24 24">
-                            <path d="M7 10l5 5 5-5z" />
-                        </svg>
-                    </button>
-                    <div class="nav-dropdown" id="damayan-menu">
-                        <a href="<?= url('/user/services/burial-form') ?>">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                            </svg>
-                            Burial Service
-                        </a>
-                    </div>
-                </div>
-
-                <!-- DA'WAH DROPDOWN -->
-                <div class="nav-dropdown-wrap" id="dawah-wrap">
-                    <button class="nav-dropdown-trigger" id="dawah-trigger" data-tooltip="Da'wah">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
-                        </svg>
-                        <span class="nav-item-label">Da'wah</span>
-                        <span class="nav-lock-badge">Locked</span>
-                        <svg class="nav-lock-icon" viewBox="0 0 24 24">
-                            <path
-                                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z" />
-                        </svg>
-                        <svg class="nav-dropdown-arrow" viewBox="0 0 24 24">
-                            <path d="M7 10l5 5 5-5z" />
-                        </svg>
-                    </button>
-                    <div class="nav-dropdown" id="dawah-menu">
-                        <!-- populated by JS based on gender -->
-                    </div>
-                </div>
-
-                <!-- APARTMENT DROPDOWN -->
-                <div class="nav-dropdown-wrap" id="apartment-wrap">
-                    <button class="nav-dropdown-trigger" id="apartment-trigger" data-tooltip="Apartment">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4z" />
-                        </svg>
-                        <span class="nav-item-label">Apartment</span>
-                        <span class="nav-lock-badge">Locked</span>
-                        <svg class="nav-lock-icon" viewBox="0 0 24 24">
-                            <path
-                                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z" />
-                        </svg>
-                        <svg class="nav-dropdown-arrow" viewBox="0 0 24 24">
-                            <path d="M7 10l5 5 5-5z" />
-                        </svg>
-                    </button>
-                    <div class="nav-dropdown open" id="apartment-menu">
-                        <a href="<?= url('/user/apartment/apply') ?>">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
-                            </svg>
-                            Application Form
-                        </a>
-                        <a href="<?= url('/user/apartment/status') ?>">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
-                            </svg>
-                            Application Status
-                        </a>
-                        <a href="<?= url('/user/apartment/info') ?>">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z" />
-                            </svg>
-                            Apartment Information
-                        </a>
-                    </div>
-                </div>
-            </nav>
-            <div class="sidebar-footer">
-                <a href="<?= url('/logout') ?>" class="nav-item" data-tooltip="Logout">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
-                    </svg>
-                    <span class="nav-item-label">Logout</span>
-                </a>
-            </div>
-        </aside>
+        <?php $active_page = 'profile'; include BASE_PATH . '/app/views/user/sidebar.php'; ?>
 
         <div class="main-content">
             <div class="top-bar">
@@ -556,18 +413,19 @@ $phpUser = [
             apartments: 'mis_apartments',
             initialized: 'mis_data_init'
         };
-        const PROFILE_FIELDS = ['name', 'email', 'sex', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName'];
+        const PROFILE_FIELDS = ['name', 'email', 'gender', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName', 'revertYear'];
         const DEFAULT_USER = {
-            id: 'USR-001',
-            name: 'Muhammad Usman',
-            email: 'musman@example.com',
-            sex: '',
+            id: '<?= $_SESSION['user_id'] ?? "USR-001" ?>',
+            name: '<?= addslashes($_SESSION['name'] ?? "User") ?>',
+            email: '<?= addslashes($_SESSION['email'] ?? "") ?>',
+            gender: '<?= addslashes($_SESSION['gender'] ?? "") ?>',
             phone: '',
             address: '',
             dob: '',
             civil: '',
             occupation: '',
             arabicName: '',
+            membership: '',
             revertYear: '',
             apartment: '',
             profileComplete: false
@@ -643,11 +501,10 @@ $phpUser = [
                 ...DEFAULT_USER
             };
 
-            // Sync with DB data if available
+            // Sync with DB data — DB is the source of truth.
+            // Even if empty, we overwrite localStorage/Mock defaults.
             Object.keys(DB_USER).forEach(key => {
-                if (DB_USER[key] && DB_USER[key] !== '') {
-                    user[key] = DB_USER[key];
-                }
+                user[key] = DB_USER[key] || '';
             });
 
             return user;
@@ -656,9 +513,8 @@ $phpUser = [
         function updateUser(data) {
             const user = getUser();
             Object.assign(user, data);
-            const filled = PROFILE_FIELDS.filter(k => user[k] && String(user[k]).trim() !== '');
-            user.profileComplete = filled.length === PROFILE_FIELDS.length;
-            localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(user));
+            // Do NOT write back to localStorage — the server DB is the source of truth.
+            // The sidebar sync script handles session → localStorage on next load.
             return user;
         }
 
@@ -693,24 +549,25 @@ $phpUser = [
 
         const user = getUser();
 
-        // ── Da'wah dropdown ──
+        // ── Da'wah dropdown — use session gender ──
+        const SESSION_GENDER = '<?= addslashes($_SESSION['gender'] ?? '') ?>';
         const dawahMenu = document.getElementById('dawah-menu');
         const dawahTrigger = document.getElementById('dawah-trigger');
-        if (user.sex === 'Female') {
+        if (SESSION_GENDER.toLowerCase() === 'female') {
             dawahMenu.innerHTML = `
-            <a href="<?= url('/user/services/counseling-female') ?>"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Sisters' Counseling</a>`;
-            if (dawahTrigger) dawahTrigger.setAttribute('data-href', "<?= url('/user/services/counseling-female') ?>");
+            <a href="<?= url('/user/services/counseling/female') ?>"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Sisters' Counseling</a>`;
+            if (dawahTrigger) dawahTrigger.setAttribute('data-href', "<?= url('/user/services/counseling/female') ?>");
         } else {
             dawahMenu.innerHTML = `
-            <a href="<?= url('/user/services/counseling-male') ?>"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Brothers' Counseling</a>`;
-            if (dawahTrigger) dawahTrigger.setAttribute('data-href', "<?= url('/user/services/counseling-male') ?>");
+            <a href="<?= url('/user/services/counseling/male') ?>"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Brothers' Counseling</a>`;
+            if (dawahTrigger) dawahTrigger.setAttribute('data-href', "<?= url('/user/services/counseling/male') ?>");
         }
 
         // ── Populate form fields ──
         const fields = {
             name: 'f-name',
             email: 'f-email',
-            sex: 'f-gender',
+            gender: 'f-gender',
             phone: 'f-phone',
             dob: 'f-dob',
             civil: 'f-civil',
@@ -726,24 +583,17 @@ $phpUser = [
         document.getElementById('profile-fullname').textContent = user.name;
         document.getElementById('profile-email').textContent = user.email;
 
-        // ── Set verification role ──
-        const isProfileComplete = user.profileComplete;
+        // ── Set verification role from SESSION (not localStorage) ──
+        const SESSION_ROLE = '<?= htmlspecialchars($_SESSION['role'] ?? '') ?>';
         const navRole = document.getElementById('nav-role');
         if (navRole) {
-            navRole.textContent = isProfileComplete ? "<?= $_SESSION['role'] ?? 'Verified User' ?>" : 'Not Verified';
-            navRole.style.color = isProfileComplete ? 'var(--success)' : 'var(--warning)';
+            navRole.style.color = 'var(--success)';
         }
         const roleBadge = document.getElementById('role-badge');
-        if (roleBadge) {
-            if (isProfileComplete) {
-                roleBadge.innerHTML = '✅' + " <?= $_SESSION['role'] ?? 'Verified User' ?>";
-                roleBadge.style.background = 'rgba(23,107,69,0.1)';
-                roleBadge.style.color = 'var(--primary)';
-            } else {
-                roleBadge.innerHTML = '⏳ Not Verified';
-                roleBadge.style.background = 'rgba(199,154,43,0.12)';
-                roleBadge.style.color = 'var(--warning)';
-            }
+        if (roleBadge && SESSION_ROLE) {
+            roleBadge.innerHTML = '✅ ' + SESSION_ROLE;
+            roleBadge.style.background = 'rgba(23,107,69,0.1)';
+            roleBadge.style.color = 'var(--primary)';
         }
 
 
@@ -787,9 +637,8 @@ $phpUser = [
         document.getElementById('qs-rejected').textContent = reqs.filter(r => r.status === 'rejected').length;
 
         // Profile completion
-        const completionFields = ['name', 'email', 'sex', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName'];
-        const filled = completionFields.filter(k => user[k] && String(user[k]).trim() !== '').length;
-        const pct = Math.round(filled / completionFields.length * 100);
+        const filled = PROFILE_FIELDS.filter(k => user[k] && String(user[k]).trim() !== '').length;
+        const pct = Math.round(filled / PROFILE_FIELDS.length * 100);
         document.getElementById('completion-pct').textContent = pct + '%';
         document.getElementById('completion-bar').style.width = pct + '%';
         document.getElementById('completion-bar').style.background = pct === 100 ? 'var(--success)' : pct >= 50 ? 'var(--warning)' : 'var(--danger)';
@@ -804,17 +653,25 @@ $phpUser = [
         const avatarActionBtns = document.getElementById('avatar-action-btns');
         const uploadLabel = document.getElementById('avatar-upload-label');
         let pendingPhoto = null;
-        let committedPhoto = localStorage.getItem('mis_user_photo') || null;
+        let committedPhoto = null;
 
-        // Load saved photo or show initials
-        if (committedPhoto) {
-            avatarEl.textContent = '';
-            avatarEl.style.backgroundImage = 'url(' + committedPhoto + ')';
-            avatarEl.style.backgroundSize = 'cover';
-            avatarEl.style.backgroundPosition = 'center';
-        } else {
-            avatarEl.textContent = user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-        }
+        // Try load saved photo from server
+        fetch('<?= url('/user/profile/avatar/serve') ?>', { method: 'HEAD' })
+            .then(res => {
+                if (res.ok) {
+                    committedPhoto = '<?= url('/user/profile/avatar/serve') ?>?t=' + Date.now();
+                    avatarEl.textContent = '';
+                    avatarEl.style.backgroundImage = 'url(' + committedPhoto + ')';
+                    avatarEl.style.backgroundSize = 'cover';
+                    avatarEl.style.backgroundPosition = 'center';
+                    syncSidebarAvatar(committedPhoto);
+                } else {
+                    avatarEl.textContent = user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+                }
+            })
+            .catch(() => {
+                avatarEl.textContent = user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+            });
 
         function syncSidebarAvatar(photoUrl) {
             const navAvatar = document.getElementById('nav-avatar');
@@ -851,27 +708,69 @@ $phpUser = [
 
         // Save image
         function doSaveImage() {
-            localStorage.setItem('mis_user_photo', pendingPhoto);
-            committedPhoto = pendingPhoto;
-            pendingPhoto = null;
-            avatarActionBtns.style.display = 'none';
-            uploadLabel.style.display = 'block';
-            syncSidebarAvatar(committedPhoto);
-            showToast('🖼️ Profile image saved!', '#176b45');
+            const file = avatarInput.files[0];
+            if (!file) return;
+
+            const fd = new FormData();
+            fd.append('profile_picture', file);
+
+            const originalText = avatarSaveBtn.textContent;
+            avatarSaveBtn.textContent = 'Saving...';
+            avatarSaveBtn.disabled = true;
+
+            fetch('<?= url('/user/profile/avatar') ?>', {
+                method: 'POST',
+                body: fd
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    committedPhoto = '<?= url('/user/profile/avatar/serve') ?>?t=' + Date.now();
+                    pendingPhoto = null;
+                    avatarActionBtns.style.display = 'none';
+                    uploadLabel.style.display = 'block';
+                    syncSidebarAvatar(committedPhoto);
+                    avatarEl.style.backgroundImage = 'url(' + committedPhoto + ')';
+                    showToast('🖼️ Profile image saved!', '#176b45');
+                    localStorage.removeItem('mis_user_photo'); // clear old ls usage
+                } else {
+                    showToast('❌ Error: ' + res.message, 'var(--danger)');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                showToast('❌ Upload failed.', 'var(--danger)');
+            })
+            .finally(() => {
+                avatarSaveBtn.textContent = originalText;
+                avatarSaveBtn.disabled = false;
+            });
         }
 
         // Revert to committed photo
         function doDiscardImage() {
             pendingPhoto = null;
             avatarEl.textContent = '';
-            if (committedPhoto) {
-                avatarEl.style.backgroundImage = 'url(' + committedPhoto + ')';
-                avatarEl.style.backgroundSize = 'cover';
-                avatarEl.style.backgroundPosition = 'center';
-            } else {
-                avatarEl.style.backgroundImage = '';
-                avatarEl.textContent = user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-            }
+            // Try loading from server URL first if available
+            fetch('<?= url('/user/profile/avatar/serve') ?>', { method: 'HEAD' })
+                .then(res => {
+                    if (res.ok) {
+                        committedPhoto = '<?= url('/user/profile/avatar/serve') ?>?t=' + Date.now();
+                        avatarEl.style.backgroundImage = 'url(' + committedPhoto + ')';
+                        avatarEl.style.backgroundSize = 'cover';
+                        avatarEl.style.backgroundPosition = 'center';
+                        syncSidebarAvatar(committedPhoto);
+                    } else {
+                        avatarEl.style.backgroundImage = '';
+                        avatarEl.textContent = user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+                        syncSidebarAvatar(null);
+                    }
+                })
+                .catch(() => {
+                    avatarEl.style.backgroundImage = '';
+                    avatarEl.textContent = user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+                });
+
             avatarActionBtns.style.display = 'none';
             uploadLabel.style.display = 'block';
             avatarInput.value = '';
@@ -990,9 +889,8 @@ $phpUser = [
                         if (updated.phone) document.getElementById('contact-phone').textContent = updated.phone;
                         if (updated.address) document.getElementById('contact-address').textContent = updated.address;
 
-                        const completionFields = ['name', 'email', 'sex', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName'];
-                        const filled2 = completionFields.filter(k => updated[k] && String(updated[k]).trim() !== '').length;
-                        const pct2 = Math.round(filled2 / completionFields.length * 100);
+                        const filled2 = PROFILE_FIELDS.filter(k => updated[k] && String(updated[k]).trim() !== '').length;
+                        const pct2 = Math.round(filled2 / PROFILE_FIELDS.length * 100);
 
                         document.getElementById('completion-pct').textContent = pct2 + '%';
                         const compBar = document.getElementById('completion-bar');
@@ -1107,19 +1005,13 @@ $phpUser = [
         const sidebar = document.getElementById('sidebar');
         document.getElementById('sidebar-toggle').addEventListener('click', () => sidebar.classList.toggle('collapsed'));
 
-        // ── Lock/Unlock service dropdowns based on profile completion ──
-        const isProfile = pct === 100;
-
+        // ── Lock/Unlock service dropdowns — always unlocked for logged-in users ──
         function applyDropdownLocks() {
             const wraps = ['damayan-wrap', 'dawah-wrap', 'apartment-wrap'];
             wraps.forEach(id => {
                 const wrap = document.getElementById(id);
                 if (!wrap) return;
-                if (isProfile) {
-                    wrap.classList.remove('locked');
-                } else {
-                    wrap.classList.add('locked');
-                }
+                wrap.classList.remove('locked');
             });
         }
         applyDropdownLocks();

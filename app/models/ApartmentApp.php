@@ -40,21 +40,66 @@ class ApartmentApp {
                 $cols = implode(',', array_keys($safe));
                 $phs  = implode(',', array_map(fn($k) => ":$k", array_keys($safe)));
                 $sql  = "INSERT INTO tenant_addinfo ($cols) VALUES ($phs)";
+                $stmt = $this->db->prepare($sql);
+                $stmt->execute($safe);
+                $lastId = $this->db->lastInsertId();
             } else {
                 $set = implode(',', array_map(fn($k) => "$k = :$k", array_keys($safe)));
                 $sql = "UPDATE tenant_addinfo SET $set WHERE tenant_id = :tenant_id";
                 $safe['tenant_id'] = $userId;
+                $stmt = $this->db->prepare($sql);
+                $stmt->execute($safe);
+                $lastId = $existing['tenant_info'];
             }
-            $stmt = $this->db->prepare($sql);
-            $result = $stmt->execute($safe);
             $this->db->commit();
-            return $result;
+            return $lastId;
         } catch (PDOException $e) {
             $this->db->rollBack();
             error_log("saveInfo failed: " . $e->getMessage());
             return false;
         }
     }
+
+    public function saveInfoImage($infoId, $docType, $binaryData, $mimeType) {
+        $this->db->beginTransaction();
+        try {
+            // Upsert logic for tenant_addinfo_images based on addinfo_id and doc_type
+            $stmt = $this->db->prepare("SELECT id FROM tenant_addinfo_images WHERE addinfo_id = :info_id AND doc_type = :doc_type LIMIT 1");
+            $stmt->execute(['info_id' => $infoId, 'doc_type' => $docType]);
+            $existing = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($existing) {
+                $sql = "UPDATE tenant_addinfo_images SET image = :data, mime_type = :mime WHERE id = :id";
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindValue(':id', $existing['id'], PDO::PARAM_INT);
+            } else {
+                $sql = "INSERT INTO tenant_addinfo_images (addinfo_id, doc_type, image, mime_type) VALUES (:info_id, :doc_type, :data, :mime)";
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindValue(':info_id', $infoId, PDO::PARAM_INT);
+                $stmt->bindValue(':doc_type', $docType, PDO::PARAM_STR);
+            }
+            $stmt->bindValue(':data', $binaryData, PDO::PARAM_LOB);
+            $stmt->bindValue(':mime', $mimeType, PDO::PARAM_STR);
+            $result = $stmt->execute();
+            $this->db->commit();
+            return $result;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            error_log("saveInfoImage failed: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getAddInfoImage($infoId, $docType) {
+        $stmt = $this->db->prepare("SELECT image, mime_type FROM tenant_addinfo_images WHERE addinfo_id = :info_id AND doc_type = :doc_type LIMIT 1");
+        $stmt->execute(['info_id' => $infoId, 'doc_type' => $docType]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row && !empty($row['image'])) {
+            return ['data' => $row['image'], 'mime' => $row['mime_type'] ?: 'image/jpeg'];
+        }
+        return null;
+    }
+
 
     // ─── apartmentsapp (unit type) ────────────────────────
     public function getApplication($userId) {

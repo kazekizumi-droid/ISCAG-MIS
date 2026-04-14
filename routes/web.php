@@ -27,6 +27,8 @@ $routes = [
     '/user/dashboard'   => ['UserController',  'dashboard'],
     '/user/profile'     => ['UserController',  'profile'],
     '/user/profile/update' => ['UserController', 'updateProfile'],
+    '/user/profile/avatar' => ['UserController', 'uploadAvatar'],
+    '/user/profile/avatar/serve' => ['UserController', 'serveAvatar'],
     '/user/notifications' => ['UserController', 'notifications'],
     '/logout'           => ['AuthController', 'logout'],
 
@@ -39,7 +41,12 @@ $routes = [
     '/user/apartment/upload' => ['ApartmentController', 'handleUpload'],
     '/user/apartment/image'  => ['ApartmentController', 'serveImage'],
 
-    // Service Modules (New)
+    // Service Modules
+    '/user/services/burial-form'      => ['UserController', 'burialForm'],
+    '/user/services/counseling/male'   => ['UserController', 'maleCounseling'],
+    '/user/services/counseling/female' => ['UserController', 'femaleCounseling'],
+
+    // Admin Modules (New)
     '/admin/apartment'  => ['AdminController', 'apartment'],
     '/admin/payment'    => ['AdminController', 'payment'],
 ];

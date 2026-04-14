@@ -4,80 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ISCAG MIS — Sisters' Counseling Request</title>
-  <link rel="stylesheet" href="../../../css/user-shared.css" />
+    <link rel="stylesheet" href="<?= asset('css/user-shared.css') ?>" />
 </head>
 <body>
 <div class="app-wrapper">
 
   <!-- ═══ SIDEBAR ═══ -->
-  <aside class="sidebar" id="sidebar">
-    <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">
-      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-    </button>
-    <div class="sidebar-header">
-      <div class="sidebar-brand">
-        <img src="../../../../logo.jpg" style="max-width:48px;max-height:48px;border-radius:8px;" alt="ISCAG" />
-        <div class="brand-text"><strong>ISCAG MIS</strong><span>User Portal</span></div>
-      </div>
-    </div>
-    <div class="sidebar-user">
-      <div class="user-avatar" id="nav-avatar" style="background:var(--accent);">MU</div>
-      <div class="user-info"><strong id="nav-name">Muhammad Usman</strong><span id="nav-role">Not Verified</span></div>
-    </div>
-    <nav class="sidebar-nav">
-      <div class="nav-section-label">Menu</div>
-      <a href="../../user-dashboard.html" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-        <span class="nav-item-label">My Dashboard</span>
-      </a>
-      <a href="../../user_profile.html" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
-        <span class="nav-item-label">My Profile</span>
-      </a>
-      <div class="nav-section-label">Services</div>
-
-      <!-- DAMAYAN DROPDOWN -->
-      <div class="nav-dropdown-wrap">
-        <button class="nav-dropdown-trigger" id="damayan-trigger">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
-          <span class="nav-item-label">Damayan</span>
-          <svg class="nav-dropdown-arrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-        </button>
-        <div class="nav-dropdown" id="damayan-menu">
-          <a href="../../Damayan/user_burial-form.html">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-            Burial Service
-          </a>
-        </div>
-      </div>
-
-      <!-- DA'WAH DROPDOWN -->
-      <div class="nav-dropdown-wrap">
-        <button class="nav-dropdown-trigger open" id="dawah-trigger">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-          <span class="nav-item-label">Da'wah</span>
-          <svg class="nav-dropdown-arrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-        </button>
-        <div class="nav-dropdown open" id="dawah-menu">
-          <a href="user_form-female-counseling.html" style="color:white;font-weight:600;">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-            Sisters' Counseling
-          </a>
-        </div>
-      </div>
-
-      <a href="../../Apartment/user_form-apartment.html" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4z"/></svg>
-        <span class="nav-item-label">Apartment</span>
-      </a>
-    </nav>
-    <div class="sidebar-footer">
-      <a href="../../../../homepage/login.html" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-        <span class="nav-item-label">Logout</span>
-      </a>
-    </div>
-  </aside>
+  <?php 
+    $active_page = 'counseling_female'; 
+    include BASE_PATH . '/app/views/user/sidebar.php'; 
+  ?>
 
   <!-- ═══ MAIN CONTENT ═══ -->
   <div class="main-content">
@@ -87,13 +23,13 @@
         <div class="top-bar-subtitle">Schedule a confidential counseling session with our female counselors</div>
       </div>
       <div class="top-bar-actions">
-        <a href="../../user-dashboard.html" class="btn-topbar">← Back to Dashboard</a>
+        <a href="<?= url('/user/dashboard') ?>" class="btn-topbar">← Back to Dashboard</a>
       </div>
     </div>
 
     <div class="page-body">
       <div class="breadcrumb-bar">
-        <a href="../../user-dashboard.html">Dashboard</a>
+        <a href="<?= url('/user/dashboard') ?>">Dashboard</a>
         <span class="sep">›</span>
         <span class="current">Sisters' Counseling Request Form</span>
       </div>
@@ -214,7 +150,7 @@
           </div>
 
           <div class="form-submit-row">
-            <a href="../../user-dashboard.html" class="btn-cancel">Cancel</a>
+            <a href="<?= url('/user/dashboard') ?>" class="btn-cancel">Cancel</a>
             <button class="btn-submit" type="button" id="submit-btn">Submit Counseling Request</button>
           </div>
 
@@ -228,7 +164,14 @@
   // ── Inlined data helpers ──
   const STORAGE_KEYS = { user: 'mis_user', requests: 'mis_requests', initialized: 'mis_data_init' };
   const PROFILE_FIELDS = ['name','email','gender','phone','address','dob','civil','occupation','arabicName','membership'];
-  const DEFAULT_USER = { id:'USR-001', name:'Muhammad Usman', email:'musman@example.com', gender:'', phone:'', address:'', dob:'', civil:'', occupation:'', arabicName:'', membership:'', revertYear:'', apartment:'', profileComplete:false };
+  const DEFAULT_USER = { 
+    id: '<?= $_SESSION['user_id'] ?? "USR-001" ?>', 
+    name: '<?= addslashes($_SESSION['name'] ?? "User") ?>', 
+    role: '<?= addslashes($_SESSION['role'] ?? "Tenant") ?>',
+    email:'<?= $_SESSION['email'] ?? "" ?>', 
+    gender:'<?= $_SESSION['gender'] ?? "" ?>', 
+    phone:'', address:'', dob:'', civil:'', occupation:'', arabicName:'', membership:'', revertYear:'', apartment:'', profileComplete:false 
+  };
 
   function initData() {
     if (!localStorage.getItem(STORAGE_KEYS.initialized)) {
@@ -238,7 +181,10 @@
   }
   function getUser() {
     const raw = localStorage.getItem(STORAGE_KEYS.user);
-    return raw ? JSON.parse(raw) : { ...DEFAULT_USER };
+    const stored = raw ? JSON.parse(raw) : { ...DEFAULT_USER };
+    stored.id = DEFAULT_USER.id;
+    stored.name = DEFAULT_USER.name;
+    return stored;
   }
   function getProfileCompletion() {
     const user = getUser();
@@ -264,22 +210,7 @@
 
   initData();
 
-  // ── Load user nav ──
   const user = getUser();
-  const navName = document.getElementById('nav-name');
-  const navAvatar = document.getElementById('nav-avatar');
-  if (navName) navName.textContent = user.name;
-  if (navAvatar) {
-    const photo = localStorage.getItem('mis_user_photo');
-    if (photo) {
-      navAvatar.textContent = '';
-      navAvatar.style.backgroundImage = 'url(' + photo + ')';
-      navAvatar.style.backgroundSize = 'cover';
-      navAvatar.style.backgroundPosition = 'center';
-    } else {
-      navAvatar.textContent = user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-    }
-  }
 
   // ── Profile access gate + gender gate ──
   const { percentage, missingFields } = getProfileCompletion();
@@ -356,7 +287,7 @@
     document.body.insertAdjacentHTML('beforeend', modalHtml);
 
     const modal = document.getElementById('access-control-modal');
-    document.getElementById('acm-primary-btn').addEventListener('click', () => { window.location.href = primaryUrl; });
+    document.getElementById('acm-primary-btn').addEventListener('click', () => { window.location.href = '<?= url('/user/profile') ?>'; });
     document.getElementById('acm-cancel-btn').addEventListener('click', () => {
       modal.style.animation = 'acmFadeIn 0.2s ease reverse forwards';
       setTimeout(() => modal.remove(), 200);
@@ -405,7 +336,7 @@
           <h3 style="font-family:'Lora',serif;font-size:1.3rem;font-weight:700;color:var(--primary-dark);margin:0 0 12px;">Request Submitted</h3>
           <p style="font-size:1rem;color:var(--warning);font-weight:700;margin:0 0 10px;">Pending... please wait for confirmation.</p>
           <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.7;margin:0 0 24px;">Your counseling request has been received. A counselor will review your request and schedule your session.</p>
-          <a href="../../user-dashboard.html" style="display:inline-block;padding:10px 24px;border-radius:8px;background:linear-gradient(135deg,var(--primary-dark),var(--primary-light));color:white;font-size:0.85rem;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(23,107,69,0.25);">Return to Dashboard</a>
+          <a href="<?= url('/user/dashboard') ?>" style="display:inline-block;padding:10px 24px;border-radius:8px;background:linear-gradient(135deg,var(--primary-dark),var(--primary-light));color:white;font-size:0.85rem;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(23,107,69,0.25);">Return to Dashboard</a>
         </div>
       </div>
     `;

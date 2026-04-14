@@ -1,3 +1,32 @@
+<?php
+if (!defined('BASE_PATH')) {
+    define('BASE_PATH', dirname(__DIR__, 4));
+}
+require_once BASE_PATH . '/app/helpers/Auth.php';
+Auth::protect();
+
+$userId = $_SESSION['user_id'] ?? null;
+$dbUser = [];
+if ($userId) {
+    require_once BASE_PATH . '/app/models/User.php';
+    $userModel = new User();
+    $account = $userModel->findById($userId);
+    $info = $userModel->getAdditionalInfo($userId);
+    
+    $dbUser = [
+        'name' => $info['full_name'] ?? trim(($account['first_name'] ?? '') . ' ' . ($account['last_name'] ?? '')),
+        'email' => $info['email'] ?? ($account['email'] ?? ''),
+        'gender' => $info['sex'] ?? ($account['sex'] ?? ''),
+        'phone' => $info['phone'] ?? ($account['contactnum'] ?? ''),
+        'dob' => $info['birthdate'] ?? '',
+        'civil' => $info['civil_status'] ?? '',
+        'address' => $info['address'] ?? '',
+        'occupation' => $info['occupation'] ?? '',
+        'arabicName' => $info['muslimname'] ?? '',
+        'revertYear' => !empty($info['dateofshahadah']) ? date('Y', strtotime($info['dateofshahadah'])) : '',
+    ];
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -1633,121 +1662,10 @@
   <div class="app-wrapper">
 
     <!-- ═══ SIDEBAR ═══ -->
-    <aside class="sidebar" id="sidebar">
-      <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">
-        <svg viewBox="0 0 24 24">
-          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-        </svg>
-      </button>
-      <div class="sidebar-header">
-        <div class="sidebar-brand">
-          <img src="../../../logo.jpg" style="max-width:48px;max-height:48px;border-radius:8px;" alt="ISCAG" />
-          <div class="brand-text"><strong>ISCAG MIS</strong><span>User Portal</span></div>
-        </div>
-      </div>
-      <div class="sidebar-user">
-        <div class="user-avatar" id="nav-avatar" style="background:var(--accent);">MU</div>
-        <div class="user-info"><strong id="nav-name">Muhammad Usman</strong><span id="nav-role">Not Verified</span>
-        </div>
-      </div>
-      <nav class="sidebar-nav">
-        <div class="nav-section-label">Menu</div>
-        <a href="<?= url('/user/dashboard') ?>" class="nav-item">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
-          </svg>
-          <span class="nav-item-label">My Dashboard</span>
-        </a>
-        <a href="<?= url('/user/profile') ?>" class="nav-item">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-          </svg>
-          <span class="nav-item-label">My Profile</span>
-        </a>
-        <div class="nav-section-label">Services</div>
-
-        <!-- DAMAYAN DROPDOWN -->
-        <div class="nav-dropdown-wrap">
-          <button class="nav-dropdown-trigger" id="damayan-trigger">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-            </svg>
-            <span class="nav-item-label">Damayan</span>
-            <svg class="nav-dropdown-arrow" viewBox="0 0 24 24">
-              <path d="M7 10l5 5 5-5z" />
-            </svg>
-          </button>
-          <div class="nav-dropdown" id="damayan-menu">
-            <a href="../Damayan/user_burial-form.html">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-              </svg>
-              Burial Service
-            </a>
-          </div>
-        </div>
-
-        <!-- DA'WAH DROPDOWN -->
-        <div class="nav-dropdown-wrap">
-          <button class="nav-dropdown-trigger" id="dawah-trigger">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
-            </svg>
-            <span class="nav-item-label">Da'wah</span>
-            <svg class="nav-dropdown-arrow" viewBox="0 0 24 24">
-              <path d="M7 10l5 5 5-5z" />
-            </svg>
-          </button>
-          <div class="nav-dropdown" id="dawah-menu">
-            <!-- populated by JS based on gender -->
-          </div>
-        </div>
-
-        <!-- APARTMENT DROPDOWN -->
-        <div class="nav-dropdown-wrap">
-          <button class="nav-dropdown-trigger open" id="apartment-trigger">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4z" />
-            </svg>
-            <span class="nav-item-label">Apartment</span>
-            <svg class="nav-dropdown-arrow" viewBox="0 0 24 24">
-              <path d="M7 10l5 5 5-5z" />
-            </svg>
-          </button>
-          <div class="nav-dropdown open" id="apartment-menu">
-            <a href="<?= url('/user/apartment/apply') ?>" class="active" style="color:white;font-weight:600;">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
-              </svg>
-              Application Form
-            </a>
-            <a href="<?= url('/user/apartment/status') ?>">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
-              </svg>
-              Application Status
-            </a>
-            <a href="<?= url('/user/apartment/info') ?>">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z" />
-              </svg>
-              Apartment Information
-            </a>
-          </div>
-        </div>
-      </nav>
-      <div class="sidebar-footer">
-        <a href="<?= url('/logout') ?>" class="nav-item">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
-          </svg>
-          <span class="nav-item-label">Logout</span>
-        </a>
-      </div>
-    </aside>
+    <?php 
+      $active_page = 'apartment_apply'; 
+      include BASE_PATH . '/app/views/user/sidebar.php'; 
+    ?>
 
     <!-- ═══ MAIN CONTENT ═══ -->
     <div class="main-content">
@@ -2290,22 +2208,13 @@
       apartments: 'mis_apartments',
       initialized: 'mis_data_init'
     };
-    const PROFILE_FIELDS = ['name', 'email', 'gender', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName', 'membership'];
+    const PROFILE_FIELDS = ['name', 'email', 'gender', 'phone', 'address', 'dob', 'civil', 'occupation', 'arabicName', 'revertYear'];
     const DEFAULT_USER = {
-      id: 'USR-001',
-      name: 'Muhammad Usman',
-      email: 'musman@example.com',
-      gender: '',
-      phone: '',
-      address: '',
-      dob: '',
-      civil: '',
-      occupation: '',
-      arabicName: '',
-      membership: '',
-      revertYear: '',
-      apartment: '',
-      profileComplete: false
+      id: '<?= $_SESSION['user_id'] ?? "USR-001" ?>',
+      name: '<?= addslashes($_SESSION['name'] ?? "User") ?>',
+      email: '<?= addslashes($_SESSION['email'] ?? "") ?>',
+      gender: '<?= addslashes($_SESSION['gender'] ?? "") ?>',
+      phone: '', address: '', dob: '', civil: '', occupation: '', arabicName: '', membership: '', revertYear: '', apartment: '', profileComplete: false
     };
     const DEFAULT_REQUESTS = [{
         id: 'BUR-001',
@@ -2370,11 +2279,20 @@
       }
     }
 
+    const DB_USER = <?= json_encode($dbUser) ?>;
+
     function getUser() {
       const raw = localStorage.getItem(STORAGE_KEYS.user);
-      return raw ? JSON.parse(raw) : {
+      const user = raw ? JSON.parse(raw) : {
         ...DEFAULT_USER
       };
+
+      // Sync with DB data — DB is the source of truth.
+      // Even if empty, we overwrite localStorage/Mock defaults.
+      Object.keys(DB_USER).forEach(key => {
+        user[key] = DB_USER[key] || '';
+      });
+      return user;
     }
 
     function getProfileCompletion() {

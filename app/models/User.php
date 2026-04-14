@@ -143,16 +143,30 @@ class User
             $this->db->beginTransaction();
 
             // 1. Update core fields in tenant_accounts
-            $stmt1 = $this->db->prepare("
-                UPDATE {$this->table} 
-                SET email = :email, contactnum = :phone 
-                WHERE tenant_id = :userId
-            ");
-            $res1 = $stmt1->execute([
+            $sql1 = "UPDATE {$this->table} SET email = :email, contactnum = :phone";
+            $params1 = [
                 'email'  => $data['email'],
                 'phone'  => $data['phone'],
                 'userId' => $userId
-            ]);
+            ];
+
+            if (!empty($data['profile_picture'])) {
+                $sql1 .= ", profile_picture = :profile_picture, profile_picture_mime = :profile_picture_mime";
+            }
+
+            $sql1 .= " WHERE tenant_id = :userId";
+
+            $stmt1 = $this->db->prepare($sql1);
+            $stmt1->bindValue(':email', $data['email']);
+            $stmt1->bindValue(':phone', $data['phone']);
+            $stmt1->bindValue(':userId', $userId, PDO::PARAM_INT);
+
+            if (!empty($data['profile_picture'])) {
+                $stmt1->bindValue(':profile_picture', $data['profile_picture'], PDO::PARAM_LOB);
+                $stmt1->bindValue(':profile_picture_mime', $data['profile_picture_mime']);
+            }
+
+            $res1 = $stmt1->execute();
 
             // 2. Update additional info in tenant_addinfo
             // We check if the record exists first; if not, we should probably create it
@@ -167,24 +181,31 @@ class User
                         birthdate = :dob, 
                         civil_status = :civil, 
                         occupation = :occupation, 
-                        address = :address 
+                        address = :address,
+                        dateofshahadah = :revertYear
                     WHERE tenant_id = :userId
                 ");
             } else {
                 $stmt2 = $this->db->prepare("
-                    INSERT INTO tenant_addinfo (tenant_id, muslimname, birthdate, civil_status, occupation, address)
-                    VALUES (:userId, :arabicName, :dob, :civil, :occupation, :address)
+                    INSERT INTO tenant_addinfo (tenant_id, muslimname, birthdate, civil_status, occupation, address, dateofshahadah)
+                    VALUES (:userId, :arabicName, :dob, :civil, :occupation, :address, :revertYear)
                 ");
             }
 
-            $res2 = $stmt2->execute([
-                'arabicName' => $data['arabicName'],
-                'dob'        => $data['dob'],
-                'civil'      => $data['civil'],
-                'occupation' => $data['occupation'],
-                'address'    => $data['address'],
-                'userId'     => $userId
-            ]);
+            $stmt2->bindValue(':arabicName', $data['arabicName']);
+            $stmt2->bindValue(':dob', $data['dob']);
+            $stmt2->bindValue(':civil', $data['civil']);
+            $stmt2->bindValue(':occupation', $data['occupation']);
+            $stmt2->bindValue(':address', $data['address']);
+            $stmt2->bindValue(':userId', $userId, PDO::PARAM_INT);
+            
+            $revertVal = null;
+            if (!empty($data['revertYear'])) {
+                 $revertVal = $data['revertYear'] . "-01-01";
+            }
+            $stmt2->bindValue(':revertYear', $revertVal);
+
+            $res2 = $stmt2->execute();
 
             return $this->db->commit();
         } catch (Exception $e) {
