@@ -14,486 +14,122 @@ if (!function_exists('url')) {
 
 if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staff_Tenant'])) {
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title> Admin Dashboard</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
+  <title>ISCAG MIS — Admin Hub</title>
+  <link rel="stylesheet" href="<?= asset('css/admin-shared.css') ?>" />
+  <!-- Chart.js Integration -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
-
-    :root {
-      --primary: #176b45;
-      --primary-dark: #0f5c3a;
-      --primary-light: #2f8a60;
-      --accent: #c79a2b;
-      --accent-light: #e0b84a;
-      --sidebar-width: 265px;
-      --sidebar-bg: #0f5c3a;
-      --content-bg: #f4f6f5;
-      --card-bg: #ffffff;
-      --text-main: #1f2e2a;
-      --text-muted: #6f7f78;
-      --border: #d9e3de;
-      --success: #2f8a60;
-      --warning: #c79a2b;
-      --danger: #8b2e2e;
-      --info: #1f6f5a;
-      --sidebar-text: #b8d2c7;
-      --sidebar-active: #c79a2b;
+    /* ── DASHBOARD SPECIFIC STYLES ── */
+    .module-hub-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Source Sans 3', sans-serif;
-      background: var(--content-bg);
-      color: var(--text-main);
-      font-size: 14.5px;
-      line-height: 1.6;
-    }
-
-    /* ───── LAYOUT ───── */
-    .app-wrapper {
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    /* ───── SIDEBAR ───── */
-    .sidebar {
-      width: var(--sidebar-width);
-      min-width: var(--sidebar-width);
-      height: 100vh;
-      background: var(--sidebar-bg);
+    .hub-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      transition: all 0.2s;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      position: relative;
-      flex-shrink: 0;
+      gap: 16px;
     }
 
-    .sidebar::after {
-      content: '';
-      position: absolute;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, transparent, rgba(201, 168, 76, 0.3), transparent);
+    .hub-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      transform: translateY(-3px);
     }
 
-    .sidebar-header {
-      padding: 24px 20px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    }
-
-    .sidebar-brand {
+    .hub-header {
       display: flex;
       align-items: center;
       gap: 12px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 12px;
     }
 
-    .sidebar-brand .brand-logo svg {
+    .hub-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .hub-icon svg {
       width: 20px;
       height: 20px;
-      fill: white;
+      fill: currentColor;
     }
 
-    .sidebar-brand .brand-text {
-      line-height: 1.2;
-    }
-
-    .sidebar-brand .brand-text strong {
-      display: block;
-      font-family: 'Lora', serif;
-      font-size: 0.95rem;
-      color: white;
-      font-weight: 700;
-    }
-
-    .sidebar-brand .brand-text span {
-      font-size: 0.7rem;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .sidebar-user {
-      padding: 14px 20px;
-      background: rgba(255, 255, 255, 0.04);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .user-avatar {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--primary-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: white;
-      flex-shrink: 0;
-    }
-
-    .sidebar-user .user-info {
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .sidebar-user .user-info strong {
-      display: block;
-      font-size: 0.82rem;
-      color: white;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .sidebar-user .user-info span {
-      font-size: 0.7rem;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .sidebar-nav {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px 0 8px;
-      scrollbar-width: none;
-    }
-
-    .sidebar-nav::-webkit-scrollbar {
-      display: none;
-    }
-
-    .nav-section-label {
-      padding: 10px 20px 4px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(168, 189, 208, 0.45);
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      padding: 10px 20px;
-      color: var(--sidebar-text);
-      text-decoration: none;
-      font-size: 0.87rem;
-      font-weight: 500;
-      border-left: 3px solid transparent;
-      transition: all 0.18s;
-      cursor: pointer;
-    }
-
-    .nav-item svg {
-      width: 17px;
-      height: 17px;
-      flex-shrink: 0;
-      opacity: 0.75;
-    }
-
-    .nav-item:hover {
-      color: white;
-      background: rgba(255, 255, 255, 0.06);
-      border-left-color: rgba(201, 168, 76, 0.4);
-    }
-
-    .nav-item:hover svg {
-      opacity: 1;
-    }
-
-    .nav-item.active {
-      color: white;
-      background: rgba(201, 168, 76, 0.13);
-      border-left-color: var(--accent);
-      font-weight: 600;
-    }
-
-    .nav-item.active svg {
-      opacity: 1;
-      fill: var(--accent-light);
-    }
-
-    .sidebar-footer {
-      padding: 16px 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.07);
-    }
-
-    .sidebar-footer .nav-item {
-      padding: 9px 0;
-      color: rgba(168, 189, 208, 0.6);
-      border: none;
-    }
-
-    .sidebar-footer .nav-item:hover {
-      color: #e8605a;
-      background: none;
-      border: none;
-    }
-
-    /* ───── MAIN CONTENT ───── */
-    .main-content {
-      flex: 1;
-      height: 100vh;
-      overflow-y: auto;
-      background: var(--content-bg);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .top-bar {
-      background: white;
-      border-bottom: 1px solid var(--border);
-      padding: 14px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      flex-shrink: 0;
-    }
-
-    .top-bar-title {
-      font-family: 'Lora', serif;
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--primary-dark);
-    }
-
-    .top-bar-subtitle {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 1px;
-    }
-
-    .top-bar-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .btn-topbar {
-      padding: 7px 14px;
-      border-radius: 7px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.18s;
-    }
-
-    .btn-primary-sm {
-      background: var(--primary);
-      color: white;
-    }
-
-    .btn-primary-sm:hover {
-      background: var(--primary-dark);
-      color: white;
-    }
-
-    .page-body {
-      padding: 28px;
-      flex: 1;
-    }
-
-    /* ───── STAT CARDS ───── */
-    .stat-cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-bottom: 28px;
-    }
-
-    .stat-card {
-      background: white;
-      border-radius: 10px;
-      padding: 20px 22px;
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-    }
-
-    .stat-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .stat-icon svg {
-      width: 22px;
-      height: 22px;
-    }
-
-    .stat-icon.blue {
-      background: rgba(30, 95, 139, 0.1);
-    }
-
-    .stat-icon.blue svg {
-      fill: var(--info);
-    }
-
-    .stat-icon.gold {
-      background: rgba(201, 168, 76, 0.12);
-    }
-
-    .stat-icon.gold svg {
-      fill: var(--warning);
-    }
-
-    .stat-icon.green {
-      background: rgba(46, 125, 85, 0.1);
-    }
-
-    .stat-icon.green svg {
-      fill: var(--success);
-    }
-
-    .stat-icon.red {
-      background: rgba(139, 46, 46, 0.1);
-    }
-
-    .stat-icon.red svg {
-      fill: var(--danger);
-    }
-
-    .stat-info {
-      flex: 1;
-    }
-
-    .stat-info .stat-num {
-      font-family: 'Lora', serif;
-      font-size: 1.7rem;
-      font-weight: 700;
-      color: var(--primary-dark);
-      line-height: 1;
-    }
-
-    .stat-info .stat-label {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    /* ───── SECTION CARD ───── */
-    .section-card {
-      background: white;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-      margin-bottom: 24px;
-      overflow: hidden;
-    }
-
-    .section-card-header {
-      padding: 16px 22px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: linear-gradient(to right, rgba(26, 58, 92, 0.03), transparent);
-    }
-
-    .section-card-header h6 {
-      font-family: 'Lora', serif;
-      font-size: 0.95rem;
-      font-weight: 700;
+    .hub-title h3 {
+      font-size: 1rem;
+      font-weight: 800;
       color: var(--primary-dark);
       margin: 0;
+    }
+
+    .hub-links {
       display: flex;
-      align-items: center;
+      flex-direction: column;
       gap: 8px;
     }
 
-    .section-card-header h6 svg {
-      width: 16px;
-      height: 16px;
-      fill: var(--accent);
-    }
-
-    .section-card-body {
-      padding: 22px;
-    }
-
-    /* ───── BADGES ───── */
-    .badge-status {
-      display: inline-flex;
+    .hub-link {
+      display: flex;
       align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: #f8faf9;
+      text-decoration: none;
+      color: var(--text-main);
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.18s;
     }
 
-    .badge-status::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      flex-shrink: 0;
+    .hub-link:hover {
+      background: var(--primary-light);
+      color: white;
     }
 
-    .badge-pending {
-      background: rgba(176, 125, 46, 0.12);
-      color: var(--warning);
+    .hub-link-arrow {
+      opacity: 0.5;
+      transition: transform 0.2s;
     }
 
-    .badge-pending::before {
-      background: var(--warning);
+    .hub-link:hover .hub-link-arrow {
+      transform: translateX(4px);
+      opacity: 1;
     }
 
-    .badge-approved {
-      background: rgba(46, 125, 85, 0.12);
-      color: var(--success);
+    .chart-container {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 24px;
+      margin-bottom: 24px;
+      height: 400px;
     }
 
-    .badge-approved::before {
-      background: var(--success);
+    .activity-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    /* ───── RECENT ACTIVITY ───── */
     .activity-item {
       display: flex;
-      align-items: flex-start;
       gap: 12px;
-      padding: 12px 0;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--border);
     }
 
@@ -501,314 +137,286 @@ if (Auth::hasRole(['Admin', 'Staff_Damayan', 'Staff_Male', 'Staff_Female', 'Staf
       border-bottom: none;
     }
 
-    .activity-dot {
+    .activity-marker {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      margin-top: 5px;
+      background: var(--accent);
+      margin-top: 6px;
       flex-shrink: 0;
     }
 
-    .activity-dot.blue {
-      background: var(--info);
+    .activity-content {
+      font-size: 0.85rem;
     }
 
-    .activity-dot.gold {
-      background: var(--accent);
-    }
-
-    .activity-dot.green {
-      background: var(--success);
-    }
-
-    .activity-text {
-      flex: 1;
-    }
-
-    .activity-text strong {
-      font-size: 0.87rem;
-      color: var(--text-main);
-    }
-
-    .activity-text span {
-      display: block;
-      font-size: 0.78rem;
+    .activity-time {
+      font-size: 0.72rem;
       color: var(--text-muted);
       margin-top: 2px;
-    }
-
-    /* ───── WELCOME BANNER ───── */
-    .welcome-banner {
-      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
-      border-radius: 12px;
-      padding: 24px 28px;
-      color: white;
-      margin-bottom: 24px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .welcome-banner::before {
-      content: '';
-      position: absolute;
-      right: -30px;
-      bottom: -30px;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: rgba(201, 168, 76, 0.15);
-    }
-
-    .welcome-banner::after {
-      content: '';
-      position: absolute;
-      right: 60px;
-      bottom: -50px;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .welcome-banner h3 {
-      font-family: 'Lora', serif;
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .welcome-banner p {
-      font-size: 0.87rem;
-      opacity: 0.75;
-      margin: 0;
-    }
-
-    /* ───── SCROLLBAR ───── */
-    .main-content::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .main-content::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .main-content::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 3px;
-    }
-
-    .main-content::-webkit-scrollbar-thumb:hover {
-      background: #b0bcc8;
-    }
-
-    /* ───── RESPONSIVE ───── */
-    @media (max-width: 1024px) {
-      .stat-cards {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 768px) {
-      :root {
-        --sidebar-width: 220px;
-      }
-
-      .stat-cards {
-        grid-template-columns: 1fr;
-      }
-
-      .page-body {
-        padding: 18px;
-      }
     }
   </style>
 </head>
 
 <body>
   <div class="app-wrapper">
-
     <!-- ═══ SIDEBAR ═══ -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-brand">
-          <div class="brand-logo">
-            <img src="<?= asset('assets/logo.jpg') ?>" class="w-100 h-auto" style="max-width: 60px; max-height: 60px; border-radius: 10px;" alt="ISCAG Logo">
-          </div>
-          <div class="brand-text">
-            <strong>ISCAG</strong>
-            <span>Admin Panel</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="sidebar-user">
-        <div class="user-avatar">
-          <?php
-            $admin_name_parts = explode(' ', trim($_SESSION['name'] ?? 'Admin'));
-            echo strtoupper(substr($admin_name_parts[0], 0, 1) . (count($admin_name_parts) > 1 ? substr(end($admin_name_parts), 0, 1) : ''));
-          ?>
-        </div>
-        <div class="user-info">
-          <strong><?= htmlspecialchars($_SESSION['name'] ?? 'Admin') ?></strong>
-          <span><?= htmlspecialchars($_SESSION['role'] ?? 'Administrator') ?></span>
-        </div>
-      </div>
-
-      <nav class="sidebar-nav">
-        <div class="nav-section-label">Overview</div>
-        <a href="<?= url('/admin/dashboard') ?>" class="nav-item active">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
-          </svg>
-          Dashboard
-        </a>
-
-        <div class="nav-section-label">Departments</div>
-
-        <?php if (Auth::hasRole(['Admin', 'Staff_Damayan'])): ?>
-          <a href="#" class="nav-item">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
-            Burial Records
-          </a>
-        <?php endif; ?>
-
-        <?php if (Auth::hasRole(['Admin', 'Staff_Male', 'Staff_Female'])): ?>
-          <a href="#" class="nav-item">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
-            </svg>
-            Counseling Records
-          </a>
-        <?php endif; ?>
-
-        <?php if (Auth::hasRole(['Admin', 'Staff_Tenant'])): ?>
-          <a href="#" class="nav-item">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4zm-8 4H7v-2h2v2zm0-4H7V9h2v2zm0-4H7V5h2v2zm4 8h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm4 8h-2v-2h2v2zm0-4h-2V9h2v2z" />
-            </svg>
-            Apartment Applications
-          </a>
-        <?php endif; ?>
-
-        <?php if (Auth::hasRole('Admin')): ?>
-          <div class="nav-section-label">Administration</div>
-          <a href="#" class="nav-item">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
-            </svg>
-            User Management
-          </a>
-        <?php endif; ?>
-      </nav>
-
-      <div class="sidebar-footer">
-        <a href="<?= url('/logout') ?>" class="nav-item">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
-          </svg>
-          Logout
-        </a>
-      </div>
-    </aside>
+    <?php include BASE_PATH . '/app/views/components/mis_admin_sidebar.php'; ?>
 
     <!-- ═══ MAIN CONTENT ═══ -->
-    <div class="main-content">
+    <main class="main-content">
+      <!-- Top Bar -->
       <div class="top-bar">
-        <div>
-          <div class="top-bar-title">Admin Dashboard</div>
-          <div class="top-bar-subtitle">Welcome back — here's an overview of all departments</div>
+        <div class="top-bar-left">
+          <img src="<?= asset('assets/ISCAG_Logo.jpg') ?>" style="width:40px;height:40px;border-radius:8px;margin-right:12px;" alt="Logo" />
+          <div>
+            <div class="top-bar-title">Administrative Hub</div>
+            <div class="top-bar-subtitle" id="top-date-admin">Unified Management & Service Monitoring</div>
+          </div>
         </div>
         <div class="top-bar-actions">
-          <span style="font-size:0.8rem;color:var(--text-muted);">Monday, March 19, 2026</span>
+           <button class="btn-topbar primary" onclick="location.reload()">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+            Refresh Data
+          </button>
         </div>
       </div>
 
       <div class="page-body">
-
-        <!-- WELCOME -->
-        <div class="welcome-banner">
-          <h3>Assalamu Alaikum, Admin!</h3>
-          <p>You have <strong>5 new requests</strong> pending review across all departments.</p>
-        </div>
-
-        <!-- STAT CARDS -->
-        <div class="stat-cards">
-          <div class="stat-card">
-            <div class="stat-icon blue">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-              </svg>
-            </div>
-            <div class="stat-info">
-              <div class="stat-num">24</div>
-              <div class="stat-label">Burial Requests</div>
-            </div>
+        
+        <!-- Admin Insights Ribbon -->
+        <div class="admin-insights">
+          <div class="insight-card">
+            <div class="insight-label">Total Users</div>
+            <div class="insight-value info" id="stat-users">--</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon gold">
-              <svg viewBox="0 0 24 24">
-                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
-              </svg>
-            </div>
-            <div class="stat-info">
-              <div class="stat-num">38</div>
-              <div class="stat-label">Counseling Requests</div>
-            </div>
+          <div class="insight-card">
+            <div class="insight-label">Pending Verifications</div>
+            <div class="insight-value danger" id="stat-pending">--</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon green">
-              <svg viewBox="0 0 24 24">
-                <path d="M17 11V3H7v4H3v14h8v-4h2v4h8V11h-4z" />
-              </svg>
-            </div>
-            <div class="stat-info">
-              <div class="stat-num">15</div>
-              <div class="stat-label">Apartment Applications</div>
-            </div>
+          <div class="insight-card">
+            <div class="insight-label">Apartment Occupancy</div>
+            <div class="insight-value success" id="stat-occupancy">--</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon red">
-              <svg viewBox="0 0 24 24">
-                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
-              </svg>
-            </div>
-            <div class="stat-info">
-              <div class="stat-num">62</div>
-              <div class="stat-label">Registered Users</div>
-            </div>
+          <div class="insight-card">
+            <div class="insight-label">Outstanding Billing</div>
+            <div class="insight-value warning" id="stat-billing">--</div>
+          </div>
+          <div class="insight-card">
+            <div class="insight-label">System Health</div>
+            <div class="insight-value success">Operational</div>
           </div>
         </div>
 
-        <div class="row g-4">
-          <!-- RECENT ACTIVITY -->
-          <div class="col-lg-7">
-            <div class="section-card">
-              <div class="section-card-header">
-                <h6>
-                  <svg viewBox="0 0 24 24">
-                    <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" />
-                  </svg>
-                  Recent Activity
-                </h6>
-                <span style="font-size:0.75rem;color:var(--text-muted);">Last 7 days</span>
+        <!-- CHARTS SECTION -->
+        <div class="grid-2">
+          <div class="section-card">
+            <div class="section-card-header">
+              <h6>
+                <svg viewBox="0 0 24 24"><path d="M5 9.2L11 5l6 4.2v6.1L11 19l-6-3.8V9.2z"/></svg>
+                Monthly Service Activity
+              </h6>
+            </div>
+            <div class="section-card-body">
+              <div style="height: 300px;">
+                <canvas id="activityChart"></canvas>
               </div>
-              <div class="section-card-body" style="padding-top:8px;padding-bottom:8px;">
-                <div class="activity-item">
-                  <div class="activity-dot blue"></div>
-                  <div class="activity-text">
-                    <strong>New burial request submitted</strong>
-                    <span>By Member · 2 hours ago</span>
-                  </div>
-                </div>
-              </div>
+            </div>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header">
+              <h6>
+                <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg>
+                Recent System Activity
+              </h6>
+            </div>
+            <div class="section-card-body activity-feed" id="recent-logs">
+              <!-- Logs Injected -->
+            </div>
+          </div>
+        </div>
+
+        <!-- MODULE HUB -->
+        <div class="module-hub-grid">
+          <!-- Operations -->
+          <div class="hub-card">
+            <div class="hub-header">
+              <div class="hub-icon"><svg viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg></div>
+              <div class="hub-title"><h3>Apartment Management</h3></div>
+            </div>
+            <div class="hub-links">
+              <a href="<?= url('/admin/mis_admin/apartment_records') ?>" class="hub-link">
+                Apartment Inventory <span class="hub-link-arrow">→</span>
+              </a>
+              <a href="<?= url('/admin/mis_admin/tenant_confirmation') ?>" class="hub-link">
+                Pending Tenant Approvals <span class="hub-link-arrow">→</span>
+              </a>
+              <a href="<?= url('/admin/mis_admin/parking_approval') ?>" class="hub-link">
+                Parking Allocation <span class="hub-link-arrow">→</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Finance -->
+          <div class="hub-card">
+            <div class="hub-header">
+              <div class="hub-icon" style="background:var(--accent);"><svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h9zm-9-2h10V7H12v9zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg></div>
+              <div class="hub-title"><h3>Financial Control</h3></div>
+            </div>
+            <div class="hub-links">
+              <a href="<?= url('/admin/mis_admin/billing') ?>" class="hub-link">
+                Billing & Payments <span class="hub-link-arrow">→</span>
+              </a>
+              <a href="<?= url('/admin/mis_admin/statement_of_account') ?>" class="hub-link">
+                Statement of Account <span class="hub-link-arrow">→</span>
+              </a>
+              <a href="<?= url('/admin/mis_admin/reports') ?>" class="hub-link">
+                Revenue Reports <span class="hub-link-arrow">→</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Community -->
+          <div class="hub-card">
+            <div class="hub-header">
+              <div class="hub-icon" style="background:var(--info);"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
+              <div class="hub-title"><h3>Community Records</h3></div>
+            </div>
+            <div class="hub-links">
+              <a href="<?= url('/admin/mis_admin/daawah_records') ?>" class="hub-link">
+                Da'wah & Counseling Logs <span class="hub-link-arrow">→</span>
+              </a>
+              <a href="<?= url('/admin/mis_admin/damayan_records') ?>" class="hub-link">
+                Damayan Burial Records <span class="hub-link-arrow">→</span>
+              </a>
+              <a href="<?= url('/admin/mis_admin/notifications') ?>" class="hub-link">
+                System Broadcast Hub <span class="hub-link-arrow">→</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- System -->
+          <div class="hub-card" style="border-left: 4px solid var(--primary);">
+            <div class="hub-header">
+              <div class="hub-icon" style="background:var(--primary);"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></div>
+              <div class="hub-title"><h3>System Governance</h3></div>
+            </div>
+            <div class="hub-links">
+              <a href="<?= url('/admin/mis_admin/records') ?>" class="hub-link">
+                User Management <span class="hub-link-arrow">→</span>
+              </a>
+              <a href="<?= url('/admin/mis_admin/audit_logs') ?>" class="hub-link">
+                System Audit Trails <span class="hub-link-arrow">→</span>
+              </a>
+              <a href="<?= url('/admin/mis_admin/notification') ?>" class="hub-link">
+                Internal Notifications <span class="hub-link-arrow">→</span>
+              </a>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </main>
+
+  <script src="<?= asset('JS/admin-shared.js') ?>"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // ── MOCK DATA ENGINE ──
+      const stats = {
+        users: 1248,
+        pending: 14,
+        occupancy: "92%",
+        billing: "₱142,500"
+      };
+
+      // Populate Stats
+      const statUsersEl = document.getElementById('stat-users');
+      const statPendingEl = document.getElementById('stat-pending');
+      const statOccupancyEl = document.getElementById('stat-occupancy');
+      const statBillingEl = document.getElementById('stat-billing');
+
+      if(statUsersEl) statUsersEl.innerText = stats.users.toLocaleString();
+      if(statPendingEl) statPendingEl.innerText = stats.pending;
+      if(statOccupancyEl) statOccupancyEl.innerText = stats.occupancy;
+      if(statBillingEl) statBillingEl.innerText = stats.billing;
+
+      // ── LOGS ENGINE ──
+      const logs = [
+        { text: "System broadcast sent to all Tenants", time: "2 minutes ago" },
+        { text: "Verification approved for App ID APP-2024-089", time: "45 minutes ago" },
+        { text: "Database backup completed successfully", time: "2 hours ago" },
+        { text: "Audit log purged for archived records", time: "4 hours ago" }
+      ];
+
+      const logContainer = document.getElementById('recent-logs');
+      if(logContainer) {
+          logs.forEach(log => {
+            const div = document.createElement('div');
+            div.className = 'activity-item';
+            div.innerHTML = `
+              <div class="activity-marker"></div>
+              <div class="activity-content">
+                <div>${log.text}</div>
+                <div class="activity-time">${log.time}</div>
+              </div>
+            `;
+            logContainer.appendChild(div);
+          });
+      }
+
+      // ── CHART ENGINE ──
+      const chartEl = document.getElementById('activityChart');
+      if(chartEl) {
+          const ctx = chartEl.getContext('2d');
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+              datasets: [{
+                  label: 'Tenant Verifications',
+                  data: [65, 59, 80, 81, 56, 95],
+                  borderColor: '#176b45',
+                  backgroundColor: 'rgba(23, 107, 69, 0.1)',
+                  borderWidth: 3,
+                  tension: 0.4,
+                  fill: true
+                },
+                {
+                  label: 'Burial Records',
+                  data: [12, 19, 3, 5, 2, 8],
+                  borderColor: '#c79a2b',
+                  backgroundColor: 'rgba(199, 154, 43, 0.1)',
+                  borderWidth: 2,
+                  tension: 0.4,
+                  fill: true
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'bottom' }
+              },
+              scales: {
+                y: { beginAtZero: true, grid: { color: '#eee' } },
+                x: { grid: { display: false } }
+              }
+            }
+          });
+      }
+
+      // ── Date in top bar ──
+      const now = new Date();
+      const topDate = document.getElementById('top-date-admin');
+      if(topDate) {
+          topDate.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+      }
+
+      // ── Sidebar Initialization ──
+      if (typeof initSidebar === 'function') initSidebar();
+      if (typeof initDropdowns === 'function') initDropdowns();
+    });
+  </script>
 </body>
 </html>
 <?php

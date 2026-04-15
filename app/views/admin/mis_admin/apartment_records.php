@@ -12,9 +12,9 @@
   <div class="app-wrapper">
     <?php include BASE_PATH . '/app/views/components/mis_admin_sidebar.php'; ?>
 
-    <div class="main-content">
+    <main class="main-content">
       <div class="top-bar">
-        <div style="display: flex; align-items: center;">
+        <div class="top-bar-left">
           <img src="<?= asset('assets/ISCAG_Logo.jpg') ?>" style="width:40px;height:40px;border-radius:8px;margin-right:12px;" alt="Logo" />
           <div>
             <div class="top-bar-title">Apartment Records</div>
@@ -169,7 +169,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 
   <script src="<?= asset('JS/admin-shared.js') ?>"></script>

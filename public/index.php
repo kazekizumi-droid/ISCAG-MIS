@@ -61,6 +61,22 @@ if ($route === '' || $route === '//') {
     $route = '/';
 }
 
+// ── DEVELOPER MODE: DYNAMIC PREVIEWER ──
+// Allows direct access to any view file via /preview/...
+if (str_contains($requestUri, '/preview/')) {
+    $previewPath = explode('/preview/', $requestUri)[1];
+    $viewPath = BASE_PATH . '/app/views/' . $previewPath;
+
+    if (!file_exists($viewPath) && !str_ends_with($viewPath, '.php')) {
+        $viewPath .= '.php';
+    }
+
+    if (file_exists($viewPath)) {
+        require_once $viewPath;
+        exit;
+    }
+}
+
 // Match route
 if (isset($routes[$route])) {
     [$controllerName, $method] = $routes[$route];

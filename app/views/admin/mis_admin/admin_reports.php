@@ -295,9 +295,9 @@
     <?php include BASE_PATH . '/app/views/components/mis_admin_sidebar.php'; ?>
 
     <!-- ═══ MAIN CONTENT ═══ -->
-    <div class="main-content">
+    <main class="main-content">
       <div class="top-bar">
-        <div style="display: flex; align-items: center;">
+        <div class="top-bar-left">
           <img src="<?= asset('assets/ISCAG_Logo.jpg') ?>" style="width:40px;height:40px;border-radius:8px;margin-right:12px;" alt="Logo" />
           <div>
             <div class="top-bar-title">Tenant Reports</div>
@@ -432,7 +432,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 
   <!-- ═══ VIEW REPORT MODAL ═══ -->
@@ -498,7 +498,7 @@
     initAdminData();
     initReportsData();
     setCurrentRole(ROLES.MIS_ADMIN);
-    loadUserNav(); setTopBarDate(); initSidebar();
+    loadUserNav(); setTopBarDate(); initSidebar(); initDropdowns();
     setupModalClose('modal-view');
     setupModalClose('modal-reject');
 

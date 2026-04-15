@@ -241,16 +241,16 @@
     <!-- ═══ SIDEBAR ═══ -->
     <?php include BASE_PATH . '/app/views/components/mis_admin_sidebar.php'; ?>
 
-    <div class="main-content">
+    <main class="main-content">
       <div class="top-bar">
-        <div style="display: flex; align-items: center;">
+        <div class="top-bar-left">
           <img src="<?= asset('assets/ISCAG_Logo.jpg') ?>" style="width:40px;height:40px;border-radius:8px;margin-right:12px;" alt="Logo" />
           <div>
             <div class="top-bar-title" id="page-title">Admin Notifications</div>
             <div class="top-bar-subtitle">System alerts, new requests, and system actions</div>
           </div>
         </div>
-        <div style="display:flex; gap:10px;">
+        <div class="top-bar-actions">
           <a href="<?= url('/admin/mis_admin') ?>" class="btn-topbar">← Dashboard</a>
           <button class="btn-topbar primary" onclick="markAllRead()">Mark All Read</button>
         </div>
@@ -296,7 +296,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 
   <script src="<?= asset('JS/admin-shared.js') ?>"></script>
@@ -304,6 +304,7 @@
     initAdminData();
     initReportsData();
     initSidebar();
+    initDropdowns();
 
     // Map activity log types to admin source pages
     function getSourcePage(type) {

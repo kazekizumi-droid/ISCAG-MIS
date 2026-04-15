@@ -384,6 +384,8 @@
           }
         }
       });
+      initSidebar();
+      initDropdowns();
     });
   </script>
 </body>
