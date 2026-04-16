@@ -578,3 +578,30 @@ function reportBadgeClass(status) {
   };
   return map[status] || 'badge-info';
 }
+
+/**
+ * toggleActionMenu()
+ * Toggles visibility of the three-dot action dropdown.
+ * Prevents event propagation to avoid triggering row-level clicks.
+ */
+function toggleActionMenu(btn, event) {
+    if (event) event.stopPropagation();
+    const menu = btn.nextElementSibling;
+    if (!menu) return;
+
+    const isOpen = menu.classList.contains('show');
+    
+    // Close all other instances
+    document.querySelectorAll('.action-menu-dropdown').forEach(m => m.classList.remove('show'));
+    
+    if (!isOpen) {
+        menu.classList.add('show');
+    }
+}
+
+// Global listener to close dropdowns when clicking outside
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.action-menu')) {
+        document.querySelectorAll('.action-menu-dropdown').forEach(m => m.classList.remove('show'));
+    }
+});
